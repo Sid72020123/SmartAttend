@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{{ title }} | SmartAttend</title>
+        <title>{% block title %}{% endblock %} | SmartAttend</title>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', path='css/style.css') }}" />
         <link rel="icon" type="image/svg" href="{{ url_for('static', path='images/logo.svg') }}" />
     </head>
@@ -24,6 +24,6 @@
                 </ul>
             </nav>
         </header>
-        {% block content %} {% endblock %}
+        <div class="content">{% block content %} {% endblock %}</div>
     </body>
 </html>

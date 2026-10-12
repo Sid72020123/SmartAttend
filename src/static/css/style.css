@@ -21,6 +21,7 @@ body {
 
     display: flex;
     flex-direction: column;
+    line-height: 1.6;
     min-height: 100vh;
 }
 
@@ -34,6 +35,9 @@ header {
     background: white;
     font-weight: bold;
     font-size: 1.5rem;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
 }
 
 .header-title {
@@ -51,12 +55,6 @@ header {
     color: black;
     text-decoration: none;
 }
-
-/* .header-title a:hover {
-    color: #0ca678;
-    cursor: pointer;
-    text-decoration: underline 3px;
-} */
 
 nav {
     font-size: 1.25rem;
@@ -80,6 +78,42 @@ nav a:hover {
     text-decoration: underline 2px;
 }
 
+.hero-section {
+    background: #212529;
+    min-height: 50px;
+    padding: 1rem;
+    color: #f8f9fa;
+
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.hero-section h1 {
+    margin: 1rem 0;
+}
+
+.hero-section ul {
+    max-width: 500px;
+    text-align: justify;
+}
+
+.hero-section li {
+    margin-bottom: 0.5rem;
+}
+
+main {
+    width: 100%;
+    background: white;
+}
+
+@media (max-width: 950px) {
+    .hero-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+}
+
 @media (max-width: 500px) {
     html {
         font-size: 12px;
@@ -99,21 +133,4 @@ nav a:hover {
     .header-title img {
         width: 30px;
     }
-
-    /* nav ul {
-        flex-direction: column;
-        gap: 8px;
-    } */
-
-    /* nav {
-        padding: 12px;
-    }
-
-    .container {
-        padding: 12px;
-    }
-
-    h1 {
-        font-size: 1.5rem;
-    } */
 }
