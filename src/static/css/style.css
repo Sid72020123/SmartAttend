@@ -95,6 +95,7 @@ nav a:hover {
 .hero-section ul {
     max-width: 500px;
     text-align: justify;
+    color: #dee2e6;
 }
 
 .hero-section li {
@@ -103,6 +104,8 @@ nav a:hover {
 
 main {
     width: 100%;
+    margin: 0 auto;
+    padding: 1rem;
     background: white;
 }
 
