@@ -26,3 +26,14 @@ def home(request: Request):
             # "title": "Home",
         },
     )
+
+
+@app.get("/test")
+def test_route(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="dashboard.html",
+        context={
+            # "title": "Home",
+        },
+    )
