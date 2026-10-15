@@ -95,7 +95,7 @@ nav a:hover {
 
 .hero-section i {
     display: block;
-    margin-bottom: 15px;
+    margin-bottom: 1.5rem;
 
     /* The code in this block below for the text linear gradient was from an AI agent */
     /* background: linear-gradient(90deg, #38bdf8 0%, #a78bfa 50%, #fb7185 100%); */
@@ -129,6 +129,11 @@ main {
 
     border-radius: 30px; */
 
+    margin-bottom: 1rem;
+    text-decoration: none;
+    display: block;
+
+    /* Gradient and transition code form an AI agent. */
     background: linear-gradient(135deg, #0d6efd 0%, #6f42c1 100%);
     color: #fff;
     border: none;
