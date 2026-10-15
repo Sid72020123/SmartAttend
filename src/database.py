@@ -8,7 +8,7 @@ load_dotenv()
 
 # --- Constants ---
 DATABASE_URL = os.getenv(
-    "DATABASE_URL", "mysql://root:password@localhost:3306/SmartAttend"
+    "DATABASE_URL", "mysql+pymysql://root:password@localhost:3306/SmartAttend"
 )
 
 

@@ -10,7 +10,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .database import Base
+from .database import Base, engine
 
 # Most of the database schema and the constraints in this file below, was suggested by an AI agent:
 
@@ -57,3 +57,7 @@ class Attendance(Base):
 
     event_id: Mapped[int] = mapped_column(ForeignKey("events.id"))
     event: Mapped["Event"] = relationship(back_populates="attendance")
+
+
+def create_tables() -> None:
+    Base.metadata.create_all(bind=engine)
