@@ -7,7 +7,7 @@
         <form id="registration-form"
               method="post"
               action="{{ url_for('register_user') }}">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+            <input type="hidden" name="csrf" value="{{ csrf_token }}" />
             <div class="field">
                 <label for="registration-name">Name</label>
                 <input id="registration-name"
@@ -51,9 +51,7 @@
             <div class="button-field">
                 <button type="submit" class="form-action-button main-form-button">Register</button>
                 <i>Already have an account?</i>
-                <a href="{{ url_for('home') }}"
-                   class="form-action-button"
-                   id="show-login">Log In</a>
+                <a href="{{ url_for('login') }}" class="form-action-button">Log In</a>
             </div>
         </form>
     </main>

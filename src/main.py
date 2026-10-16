@@ -7,7 +7,6 @@ from typing import Annotated
 from dotenv import load_dotenv
 from pydantic import ValidationError
 from fastapi import FastAPI, Request, Form, Depends
-from fastapi.exceptions import RequestValidationError
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -17,8 +16,8 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from .database import Base, engine, get_db
 from .models import create_tables, Organizer
-from .schemas import RegisterInput
-from .security import hash_password
+from .schemas import RegisterInput, LoginInput
+from .security import hash_password, verify_password
 
 # --- Config ---
 load_dotenv()
@@ -103,8 +102,8 @@ def home(request: Request):
 # Register
 @app.get("/register")
 def register(request: Request):
-    if request.session.get("organizer_id"):
-        return redirect("/dashboard")
+    # if request.session.get("organizer_id"):
+    #     return redirect("/dashboard")
     return render_template(request, "register.html")
 
 
@@ -138,13 +137,13 @@ def register_user(
             request,
             "register.html",
             error=True,
-            messages=e.errors()[0]["msg"],
+            message=e.errors()[0]["msg"],
         )
 
     organizer = Organizer(
         name=form.name,
         email=form.email,
-        password_hash=hash_password(password),
+        password_hash=hash_password(form.password),
     )
     db.add(organizer)
 
@@ -167,12 +166,55 @@ def register_user(
     return redirect("/dashboard")
 
 
-@app.get("/test")
-def test_route(request: Request):
-    return templates.TemplateResponse(
-        request=request,
-        name="dashboard.html",
-        context={
-            # "title": "Home",
-        },
-    )
+# Login
+@app.get("/login")
+def login(request: Request):
+    # if request.session.get("organizer_id"):
+    #     return redirect("/dashboard")
+    return render_template(request, "login.html")
+
+
+@app.post("/login")
+def login_user(
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+    email: Annotated[str, Form()],
+    password: Annotated[str, Form()],
+    csrf: Annotated[str, Form()],
+):
+    if not valid_csrf(request, csrf):
+        return render_template(
+            request,
+            "login.html",
+            error=True,
+            message="Your form expired. Please try again.",
+        )
+
+    try:
+        form = LoginInput(
+            email=email,
+            password=password,
+        )
+    except ValidationError as e:
+        return render_template(
+            request,
+            "login.html",
+            error=True,
+            message=e.errors()[0]["msg"],
+        )
+
+    organizer = db.query(Organizer).filter(Organizer.email == form.email).first()
+
+    if not organizer or not verify_password(form.password, organizer.password_hash):
+        return render_template(
+            request,
+            "login.html",
+            error=True,
+            message="Invalid email or password.",
+        )
+
+    request.session.clear()
+    request.session["organizer_id"] = organizer.id
+    csrf_token(request)
+
+    return redirect("/dashboard")
