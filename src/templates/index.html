@@ -1,22 +1,19 @@
-{% extends "base.html" %}
-{% block title %}Home{% endblock %}
-{% block content %}
-    <div class="hero-section">
-        <!-- The tag-lines and the list elements of the hero section are from an AI agent -->
-        <div>
-            <h1><span style="color: #ffd43b">Smart</span><span style="color: #69db7c">Attend</span></h1>
-            <i>Scan. Check In. Stay Counted.</i>
-            <a id="get-started-button" href="{{ url_for('home') }}">Get Started →</a>
-        </div>
-        <div>
-            <ul>
-                <li>SmartAttend makes event attendance simple with <b>QR codes</b>.</li>
-                <li>Organizers can create events, generate unique QR codes, and track attendance in real time.</li>
-                <li>Attendees simply scan, enter their details, and check in — no paper lists, no hassle.</li>
-                <li>Everything is organized in one place, making event management faster and easier.</li>
-            </ul>
-        </div>
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content %}
+<div class="hero-section">
+    <!-- The tag-lines and the list elements of the hero section are from an AI agent -->
+    <div>
+        <h1><span style="color: #ffd43b">Smart</span><span style="color: #69db7c">Attend</span></h1>
+        <i>Scan. Check In. Stay Counted.</i>
+        <a id="get-started-button" href="{{ url_for('register') }}">Get Started →</a>
     </div>
-    <main>
-    </main>
+    <div>
+        <ul>
+            <li>SmartAttend makes event attendance simple with <b>QR codes</b>.</li>
+            <li>Organizers can create events, generate unique QR codes, and track attendance in real time.</li>
+            <li>Attendees simply scan, enter their details, and check in — no paper lists, no hassle.</li>
+            <li>Everything is organized in one place, making event management faster and easier.</li>
+        </ul>
+    </div>
+</div>
+<main></main>
 {% endblock %}

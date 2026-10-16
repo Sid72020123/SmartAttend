@@ -12,6 +12,7 @@ fastapi==0.143.0
 h11==0.16.0
 httptools==0.9.0
 idna==3.20
+itsdangerous==2.2.0
 Jinja2==3.1.6
 jsbeautifier==2.0.3
 json5==0.17.3
@@ -22,6 +23,7 @@ pwdlib==0.3.1
 pycparser==3.11
 pydantic==2.14.0
 pydantic_core==2.50.0
+PyMySQL==1.2.3
 python-dotenv==1.2.4
 PyYAML==6.0.3
 regex==2026.9.29

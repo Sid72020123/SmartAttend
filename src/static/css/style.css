@@ -117,7 +117,8 @@ nav a:hover {
 }
 
 main {
-    width: 100%;
+    /* width: 100%; */
+    max-width: 1200px;
     margin: 0 auto;
     padding: 1rem;
     background: white;
@@ -149,6 +150,118 @@ main {
 .hero-section a#get-started-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 26px rgba(13, 110, 253, 0.38);
+}
+
+main > h1 {
+    text-align: center;
+    text-decoration: underline double #c92a2a 2px;
+}
+
+main > form {
+    font-size: 1.5rem;
+}
+
+form > .field {
+    margin-bottom: 1rem;
+}
+
+form > .button-field {
+    text-align: center;
+}
+
+.button-field i {
+    margin-top: 2rem;
+    margin-bottom: 0.3rem;
+    color: gray;
+    font-size: 1rem;
+    display: block;
+}
+
+.field label {
+    display: block;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    color: grey;
+
+    transition: color 0.2s ease;
+}
+
+.field:focus-within label {
+    color: black;
+}
+
+.field input {
+    display: block;
+    width: 100%;
+
+    padding: 0.7rem 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: white;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.field input:focus {
+    background-color: #ffd8a8;
+    border-color: #d9480f;
+    outline: none;
+}
+
+form button.form-action-button {
+    font-size: 0.9rem;
+    font-weight: bold;
+
+    border: none;
+    border-radius: 6px;
+
+    padding: 0.75rem 1.25rem;
+    cursor: pointer;
+
+    margin: 0 auto;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+button.main-form-button {
+    background: #2563eb;
+    color: white;
+}
+
+button.main-form-button:hover {
+    background: #1d4ed8;
+}
+
+.message {
+    display: block;
+    padding: 0 0.9rem;
+    margin-bottom: 0.5rem;
+
+    font-size: 0.9rem;
+
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: white;
+    font-weight: bold;
+}
+
+.message.error {
+    background-color: #ffc9c9;
+    border-color: #c92a2a;
+}
+
+.message.success {
+    background-color: #b2f2bb;
+    border-color: #2b8a3e;
+}
+
+.message.hidden {
+    display: none;
 }
 
 @media (max-width: 950px) {

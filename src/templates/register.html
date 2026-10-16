@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+    <main>
+        <!-- Register Form -->
+        <h1>Register</h1>
+        <form id="registration-form">
+            <div class="field">
+                <label for="registration-username">Username</label>
+                <input id="registration-username"
+                       type="text"
+                       name="username"
+                       autofocus
+                       autocomplete="username"
+                       required />
+            </div>
+            <div class="field">
+                <label for="registration-password">Password</label>
+                <input id="registration-password"
+                       type="password"
+                       name="password"
+                       autocomplete="new-password"
+                       required />
+            </div>
+            <div class="field">
+                <label for="confirm-password">Confirm Password</label>
+                <input id="confirm-password"
+                       type="password"
+                       name="confirm_password"
+                       autocomplete="new-password"
+                       required />
+            </div>
+            <div class="message hidden" role="alert"></div>
+            <div class="button-field">
+                <button type="submit" class="form-action-button main-form-button">Register</button>
+                <i>Already have an account?</i>
+                <button type="button" class="form-action-button" id="show-login">Log In</button>
+            </div>
+        </form>
+    </main>
+{% endblock %}
