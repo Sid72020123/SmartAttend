@@ -4,14 +4,25 @@
     <main>
         <!-- Register Form -->
         <h1>Register</h1>
-        <form id="registration-form">
+        <form id="registration-form"
+              method="post"
+              action="{{ url_for('register_user') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
             <div class="field">
-                <label for="registration-username">Username</label>
-                <input id="registration-username"
+                <label for="registration-name">Name</label>
+                <input id="registration-name"
                        type="text"
-                       name="username"
+                       name="name"
                        autofocus
-                       autocomplete="username"
+                       autocomplete="name"
+                       required />
+            </div>
+            <div class="field">
+                <label for="registration-email">Email</label>
+                <input id="registration-email"
+                       type="email"
+                       name="email"
+                       autocomplete="new-email"
                        required />
             </div>
             <div class="field">
@@ -30,11 +41,19 @@
                        autocomplete="new-password"
                        required />
             </div>
-            <div class="message hidden" role="alert"></div>
+            {% if message %}
+                {% if error %}
+                    <div class="message error" role="alert">{{ message }}</div>
+                {% else %}
+                    <div class="message success" role="alert">{{ message }}</div>
+                {% endif %}
+            {% endif %}
             <div class="button-field">
                 <button type="submit" class="form-action-button main-form-button">Register</button>
                 <i>Already have an account?</i>
-                <button type="button" class="form-action-button" id="show-login">Log In</button>
+                <a href="{{ url_for('home') }}"
+                   class="form-action-button"
+                   id="show-login">Log In</a>
             </div>
         </form>
     </main>

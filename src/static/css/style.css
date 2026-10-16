@@ -154,11 +154,14 @@ main {
 
 main > h1 {
     text-align: center;
+    margin-bottom: 30px;
     text-decoration: underline double #c92a2a 2px;
 }
 
 main > form {
     font-size: 1.5rem;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 form > .field {
@@ -211,7 +214,8 @@ form > .button-field {
     outline: none;
 }
 
-form button.form-action-button {
+form button.form-action-button,
+a.form-action-button {
     font-size: 0.9rem;
     font-weight: bold;
 
@@ -226,6 +230,16 @@ form button.form-action-button {
     transition:
         background-color 0.2s ease,
         transform 0.2s ease;
+}
+
+a.form-action-button {
+    background: #ddd;
+    text-decoration: none;
+    color: black;
+}
+
+a.form-action-button:hover {
+    background: #ced4da;
 }
 
 button.main-form-button {
