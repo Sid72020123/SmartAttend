@@ -1,0 +1,22 @@
+{% extends "base.html" %} {% block title %}Create Event{% endblock %} {% block content %}
+<main>
+    <!-- Create Event Form -->
+    <h1>Create New Event</h1>
+    <form id="create-event-form" method="post" action="{{ url_for('create_event_post') }}">
+        <input type="hidden" name="csrf" value="{{ csrf_token }}" />
+        <div class="field">
+            <label for="event-title">Event Title</label>
+            <input id="event-title" type="text" name="title" autofocus autocomplete="off" required />
+        </div>
+        {% if message %} {% if error %}
+        <div class="message error" role="alert">{{ message }}</div>
+        {% else %}
+        <div class="message success" role="alert">{{ message }}</div>
+        {% endif %} {% endif %}
+        <div class="button-field">
+            <a href="{{ url_for('dashboard') }}" class="form-action-button">Go Back</a>
+            <button type="submit" class="form-action-button main-form-button">Create</button>
+        </div>
+    </form>
+</main>
+{% endblock %}

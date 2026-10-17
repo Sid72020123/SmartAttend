@@ -12,9 +12,15 @@
             <a href="{{ url_for('home') }}" class="d-button">Settings</a>
         </div>
         <div class="event-management">
-            <div class="events-table-title">
-                <h3>Events</h3>
-                <a href="{{ url_for('home') }}" class="d-button">Create New Event +</a>
+            <h2>Your Events</h2>
+            <div class="table-buttons">
+                <a href="{{ url_for('create_event') }}"
+                   class="d-button"
+                   id="new-event-button">Create New +</a>
+            </div>
+            <div class="events-table">
+                <table>
+                </table>
             </div>
         </div>
     </main>

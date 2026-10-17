@@ -15,8 +15,8 @@ from sqlalchemy.exc import IntegrityError
 from starlette.middleware.sessions import SessionMiddleware
 
 from .database import Base, engine, get_db
-from .models import create_tables, Organizer
-from .schemas import RegisterInput, LoginInput, OrganizerOut
+from .models import create_tables, Organizer, Event
+from .schemas import RegisterInput, LoginInput, OrganizerOut, EventCreate
 from .security import hash_password, verify_password
 
 # --- Config ---
@@ -233,7 +233,7 @@ def login_user(
 @app.post("/logout")
 def logout(
     request: Request,
-    csrf: str = Form(...),
+    csrf: Annotated[str, Form()],
 ):
     if not valid_csrf(request, csrf):
         return redirect("/dashboard")
@@ -253,4 +253,71 @@ def dashboard(
     if not organizer:
         return redirect("/login")
 
-    return render_template(request, "dashboard.html", organizer=organizer)
+    events = (
+        db.query(Event)
+        .filter(Event.organizer_id == organizer.id)
+        .order_by(Event.created_at.desc())
+        .all()
+    )
+
+    return render_template(
+        request, "dashboard.html", organizer=organizer, events=events
+    )
+
+
+# Create Event
+@app.get("/events/create")
+def create_event(
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+):
+    if not get_current_organizer(request, db):
+        return redirect("/login")
+
+    return render_template(request, "create_event.html")
+
+
+@app.post("/events/create")
+def create_event_post(
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+    csrf: Annotated[str, Form()],
+    title: Annotated[str, Form()],
+):
+    organizer = get_current_organizer(request, db)
+
+    if not organizer:
+        return redirect("/login")
+
+    if not valid_csrf(request, csrf):
+        return render_template(
+            request,
+            "create_event.html",
+            error=True,
+            message="Your form expired. Please try again.",
+        )
+
+    try:
+        form = EventCreate(title=title)
+    except ValidationError as e:
+        return render_template(
+            request,
+            "create_event.html",
+            error=True,
+            message=e.errors()[0]["msg"],
+        )
+
+    new_event = Event(
+        title=form.title,
+        qr_token=secrets.token_urlsafe(32),
+        organizer_id=organizer.id,
+        is_open=True,
+    )
+
+    db.add(new_event)
+    db.commit()
+    db.refresh(new_event)
+
+    # TODO: generate QR code and save it
+
+    return redirect("/dashboard")
