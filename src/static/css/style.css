@@ -278,6 +278,27 @@ button.main-form-button:hover {
     display: none;
 }
 
+#logout-button {
+    display: block;
+    color: white;
+    background: #ff8787;
+}
+
+#logout-button:hover {
+    background: #fa5252;
+}
+
+#dashboard-button {
+    display: block;
+    text-decoration: none;
+    color: white;
+    background: #69db7c;
+}
+
+a#dashboard-button:hover {
+    background: #51cf66;
+}
+
 @media (max-width: 950px) {
     .hero-section {
         flex-direction: column;
@@ -286,7 +307,7 @@ button.main-form-button:hover {
     }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 550px) {
     html {
         font-size: 12px;
     }

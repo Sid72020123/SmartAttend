@@ -19,12 +19,14 @@
                 <ul>
                     <li><a href="{{ url_for('home') }}">Home</a></li>
                     {% if request.session.get("organizer_id") %}
-                        <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                        <li><a href="{{ url_for('dashboard') }}"
+   class="form-action-button"
+   id="dashboard-button">Dashboard</a></li>
                         <li>
                             <form method="post" action="{{ url_for('logout') }}">
-                                <input type="hidden"
-                                       name="csrf"
-                                       value="{{ csrf_token }}" /><button type="submit">Logout</button>
+                                <input type="hidden" name="csrf" value="{{ csrf_token }}" /><button type="submit"
+        class="form-action-button"
+        id="logout-button">Logout</button>
                             </form>
                         </li>
                     {% else %}
