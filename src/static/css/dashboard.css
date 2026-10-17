@@ -38,15 +38,17 @@ main > h1 {
     background: #ced4da;
 }
 
-.event-management {
-    margin-top: 20px;
+.table-buttons #new-event-button {
+    background: #2563eb;
+    color: white;
+}
+
+.table-buttons #new-event-button:hover {
+    background: #1d4ed8;
 }
 
 .event-management {
-    /* display: flex;
-    justify-content: space-around;
-    align-items: center;
- */
+    margin-top: 20px;
 }
 
 .event-management h2 {
@@ -58,6 +60,11 @@ main > h1 {
 .event-management .table-buttons {
     display: flex;
     justify-content: flex-end;
+}
+
+.event-management i {
+    font-size: 0.9rem;
+    color: gray;
 }
 
 /* Table styling from an AI agent. */
@@ -123,5 +130,14 @@ main > h1 {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    /* display: block; */
+}
+
+.events-table .event-open {
+    color: #51cf66;
+    font-weight: bold;
+}
+
+.events-table .event-closed {
+    color: #ff6b6b;
+    font-weight: bold;
 }

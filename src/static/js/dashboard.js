@@ -37,17 +37,3 @@ document.querySelectorAll(".event-created-at").forEach((element) => {
     element.textContent = humanizeTimestamp(timestamp);
     element.title = new Date(parsedTimestamp).toLocaleString();
 });
-
-document.querySelectorAll(".event-created-local").forEach((element) => {
-    const timestamp = element.getAttribute("datetime");
-    if (!timestamp) {
-        return;
-    }
-
-    const parsedTimestamp = Date.parse(timestamp);
-    if (Number.isNaN(parsedTimestamp)) {
-        return;
-    }
-
-    element.textContent = new Date(parsedTimestamp).toLocaleString();
-});

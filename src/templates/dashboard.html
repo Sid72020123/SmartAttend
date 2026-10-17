@@ -38,19 +38,15 @@
                             <tr>
                                 <td>{{ event.id }}</td>
                                 <td class="event-title">{{ event.title }}</td>
-                                <td>{{ event.is_open }}</td>
+                                <td class="{{ 'event-open' if event.is_open else 'event-closed' }}">{{ "Yes" if event.is_open else "No" }}</td>
                                 <td>
                                     <time class="event-created-at"
                                           datetime="{{ event.created_at_iso }}"
                                           title="{{ event.created_at_iso }}">
-                                        {{ event.created_at_iso }}
+                                        {{ event.created_at_iso }} ({{ event.created_at_iso }})
                                     </time>
                                 </td>
-                                <td>
-                                    <time class="event-created-local" datetime="{{ event.created_at_iso }}">
-                                        {{ event.created_at_iso }}
-                                    </time>
-                                </td>
+                                <td>TODO</td>
                             </tr>
                         {% endfor %}
                     </tbody>
