@@ -1,4 +1,5 @@
 # Some part of validation models below were suggested by an AI agent:
+from datetime import datetime
 
 from pydantic import (
     BaseModel,
@@ -110,3 +111,19 @@ class OrganizerOut:
         self.id = id
         self.name = name
         self.email = email
+
+
+class EventOut:
+    def __init__(
+        self,
+        id: int,
+        title: str,
+        is_open: bool,
+        created_at: datetime,
+        created_at_iso: str,
+    ):
+        self.id = id
+        self.title = title
+        self.is_open = is_open
+        self.created_at = created_at
+        self.created_at_iso = created_at_iso

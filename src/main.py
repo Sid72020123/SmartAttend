@@ -1,6 +1,7 @@
 import os
 import secrets
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Annotated
 
@@ -16,7 +17,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from .database import Base, engine, get_db
 from .models import create_tables, Organizer, Event
-from .schemas import RegisterInput, LoginInput, OrganizerOut, EventCreate
+from .schemas import RegisterInput, LoginInput, OrganizerOut, EventCreate, EventOut
 from .security import hash_password, verify_password
 
 # --- Config ---
@@ -71,6 +72,14 @@ def csrf_token(request: Request) -> str:
 def valid_csrf(request: Request, submitted: str) -> bool:
     expected = request.session.get("csrf_token", "")
     return bool(expected) and secrets.compare_digest(expected, submitted)
+
+
+def utc_isoformat(value: datetime) -> str:
+    if value.tzinfo is None:
+        value = value.replace(tzinfo=timezone.utc)
+    else:
+        value = value.astimezone(timezone.utc)
+    return value.isoformat().replace("+00:00", "Z")
 
 
 def render_template(request: Request, template: str, **context):
@@ -253,12 +262,23 @@ def dashboard(
     if not organizer:
         return redirect("/login")
 
-    events = (
+    raw_events = (
         db.query(Event)
         .filter(Event.organizer_id == organizer.id)
         .order_by(Event.created_at.desc())
         .all()
     )
+
+    events = [
+        EventOut(
+            id=e.id,
+            title=e.title,
+            is_open=e.is_open,
+            created_at=e.created_at,
+            created_at_iso=utc_isoformat(e.created_at),
+        )
+        for e in raw_events
+    ]
 
     return render_template(
         request, "dashboard.html", organizer=organizer, events=events
@@ -312,6 +332,7 @@ def create_event_post(
         qr_token=secrets.token_urlsafe(32),
         organizer_id=organizer.id,
         is_open=True,
+        created_at=datetime.now(timezone.utc).replace(tzinfo=None),
     )
 
     db.add(new_event)
