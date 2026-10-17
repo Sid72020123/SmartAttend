@@ -1,29 +1,41 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{% block title %}{% endblock %} | SmartAttend</title>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', path='css/style.css') }}" />
-        <link rel="icon" type="image/svg" href="{{ url_for('static', path='images/logo.svg') }}" />
+        <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}" />
+        <link rel="icon"
+              type="image/svg"
+              href="{{ url_for('static', path='images/logo.svg') }}" />
     </head>
     <body>
         <header>
             <div class="header-title">
                 <img src="{{ url_for('static', path='images/logo.svg') }}" alt="Logo" />
-                <a href="{{ url_for('home') }}"
-                    ><span style="color: #e67700">Smart</span><span style="color: #2b8a3e">Attend</span></a
-                >
+                <a href="{{ url_for('home') }}"><span style="color: #e67700">Smart</span><span style="color: #2b8a3e">Attend</span></a>
             </div>
-
             <nav>
                 <ul>
                     <li><a href="{{ url_for('home') }}">Home</a></li>
-                    <li><a href="{{ url_for('login') }}">Login</a></li>
-                    <li><a href="{{ url_for('register') }}">Register</a></li>
+                    {% if request.session.get("organizer_id") %}
+                        <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                        <li>
+                            <form method="post" action="{{ url_for('logout') }}">
+                                <input type="hidden"
+                                       name="csrf"
+                                       value="{{ csrf_token }}" /><button type="submit">Logout</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                        <li><a href="{{ url_for('register') }}">Register</a></li>
+                    {% endif %}
                 </ul>
             </nav>
         </header>
-        <div class="content">{% block content %} {% endblock %}</div>
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
     </body>
 </html>

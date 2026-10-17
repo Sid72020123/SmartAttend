@@ -102,8 +102,8 @@ def home(request: Request):
 # Register
 @app.get("/register")
 def register(request: Request):
-    # if request.session.get("organizer_id"):
-    #     return redirect("/dashboard")
+    if request.session.get("organizer_id"):
+        return redirect("/dashboard")
     return render_template(request, "register.html")
 
 
@@ -169,8 +169,8 @@ def register_user(
 # Login
 @app.get("/login")
 def login(request: Request):
-    # if request.session.get("organizer_id"):
-    #     return redirect("/dashboard")
+    if request.session.get("organizer_id"):
+        return redirect("/dashboard")
     return render_template(request, "login.html")
 
 
@@ -218,3 +218,24 @@ def login_user(
     csrf_token(request)
 
     return redirect("/dashboard")
+
+
+# Logout
+@app.post("/logout")
+def logout(
+    request: Request,
+    csrf: str = Form(...),
+):
+    if not valid_csrf(request, csrf):
+        return redirect("/dashboard")
+
+    request.session.clear()
+    return redirect("/")
+
+
+# Dashboard
+@app.get("/dashboard")
+def dashboard(request: Request):
+    if not request.session.get("organizer_id"):
+        return redirect("/login")
+    return render_template(request, "dashboard.html")
