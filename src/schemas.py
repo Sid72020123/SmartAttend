@@ -12,6 +12,7 @@ from pydantic import (
 from pydantic_core import PydanticCustomError
 
 
+# --- Request Models ---
 class RegisterInput(BaseModel):
     name: str
     email: EmailStr
@@ -90,3 +91,11 @@ class AttendanceOutput(BaseModel):
 
     attendee_name: str
     email: EmailStr
+
+
+# --- Response Models ---
+class OrganizerOut:
+    def __init__(self, id: int, name: str, email: str):
+        self.id = id
+        self.name = name
+        self.email = email

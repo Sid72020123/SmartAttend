@@ -16,7 +16,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from .database import Base, engine, get_db
 from .models import create_tables, Organizer
-from .schemas import RegisterInput, LoginInput
+from .schemas import RegisterInput, LoginInput, OrganizerOut
 from .security import hash_password, verify_password
 
 # --- Config ---
@@ -82,6 +82,15 @@ def render_template(request: Request, template: str, **context):
             "csrf_token": csrf_token(request),
         },
     )
+
+
+def get_current_organizer(request: Request, db: Session):
+    organizer_id = request.session.get("organizer_id")
+    if not organizer_id:
+        return None
+
+    organizer = db.get(Organizer, organizer_id)
+    return OrganizerOut(id=organizer.id, name=organizer.name, email=organizer.email)
 
 
 # --- App Routes ---
@@ -235,7 +244,13 @@ def logout(
 
 # Dashboard
 @app.get("/dashboard")
-def dashboard(request: Request):
-    if not request.session.get("organizer_id"):
+def dashboard(
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+):
+
+    organizer = get_current_organizer(request, db)
+    if not organizer:
         return redirect("/login")
-    return render_template(request, "dashboard.html")
+
+    return render_template(request, "dashboard.html", organizer=organizer)

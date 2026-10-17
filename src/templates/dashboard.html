@@ -1,7 +1,21 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Organizer Dashboard{% endblock %}
+{% block styles %}
+    <link rel="stylesheet"
+          href="{{ url_for('static', path='css/dashboard.css') }}" />
+{% endblock %}
 {% block content %}
     <main>
-        Welcome, {user}!
+        <h1>Organizer Dashboard</h1>
+        <div class="user-section">
+            <h3 class="user-name">Welcome, {{ organizer.name }}!</h3>
+            <a href="{{ url_for('home') }}" class="d-button">Settings</a>
+        </div>
+        <div class="event-management">
+            <div class="events-table-title">
+                <h3>Events</h3>
+                <a href="{{ url_for('home') }}" class="d-button">Create New Event +</a>
+            </div>
+        </div>
     </main>
 {% endblock %}
