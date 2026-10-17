@@ -278,6 +278,12 @@ def dashboard(
             created_at_iso=utc_isoformat(e.created_at),
         )
         for e in raw_events
+        + raw_events
+        + raw_events
+        + raw_events
+        + raw_events
+        + raw_events
+        + raw_events
     ]
 
     return render_template(

@@ -21,6 +21,7 @@
                    class="d-button"
                    id="new-event-button">Create New +</a>
             </div>
+            <i>Showing {{ events | length }} events.</i>
             <div class="events-table">
                 <table>
                     <thead>
@@ -36,7 +37,7 @@
                         {% for event in events %}
                             <tr>
                                 <td>{{ event.id }}</td>
-                                <td>{{ event.title }}</td>
+                                <td class="event-title">{{ event.title }}</td>
                                 <td>{{ event.is_open }}</td>
                                 <td>
                                     <time class="event-created-at"
@@ -46,8 +47,7 @@
                                     </time>
                                 </td>
                                 <td>
-                                    <time class="event-created-local"
-                                          datetime="{{ event.created_at_iso }}">
+                                    <time class="event-created-local" datetime="{{ event.created_at_iso }}">
                                         {{ event.created_at_iso }}
                                     </time>
                                 </td>
