@@ -17,7 +17,14 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from .database import Base, engine, get_db
 from .models import create_tables, Organizer, Event
-from .schemas import RegisterInput, LoginInput, OrganizerOut, EventCreate, EventOut
+from .schemas import (
+    RegisterInput,
+    LoginInput,
+    OrganizerOut,
+    EventCreate,
+    EventOut,
+    EventEdit,
+)
 from .security import hash_password, verify_password
 
 # --- Config ---
@@ -358,13 +365,79 @@ def create_event_post(
 
 
 # Manage Events
-# @app.get("/events/manage/{event_id}")
-# def manage_event(
-#     request: Request,
-#     db: Annotated[Session, Depends(get_db)],
-#     event_id: int
-# ):
-#     if not get_current_organizer(request, db):
-#         return redirect("/login")
+@app.get("/events/manage/{event_id}")
+def manage_event(
+    request: Request, db: Annotated[Session, Depends(get_db)], event_id: int
+):
+    organizer = get_current_organizer(request, db)
+    if not organizer:
+        return redirect("/login")
 
-#     return render_template(request, "create_event.html")
+    e = db.get(Event, event_id)
+    if e and e.organizer_id == organizer.id:
+        event = EventOut(
+            id=e.id,
+            title=e.title,
+            is_open=e.is_open,
+            created_at=e.created_at,
+            created_at_iso=utc_isoformat(e.created_at),
+        )
+        return render_template(
+            request, "manage_event.html", organizer=organizer, event=event
+        )
+
+    set_message(
+        request,
+        "Invalid / Deleted event OR you have no access manage it.",
+        "error",
+    )
+    return redirect("/dashboard")
+
+
+@app.post("/events/manage/{event_id}")
+def edit_event(
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+    csrf: Annotated[str, Form()],
+    event_id: int,
+    title: Annotated[str, Form()],
+    status: Annotated[str, Form()],
+):
+    organizer = get_current_organizer(request, db)
+    if not organizer:
+        return redirect("/login")
+
+    if not valid_csrf(request, csrf):
+        return render_template(
+            request,
+            "manage_event.html",
+            error=True,
+            message="Your form expired. Please try again.",
+        )
+
+    try:
+        form = EventEdit(title=title, status=status)
+    except ValidationError as e:
+        return render_template(
+            request,
+            "manage_event.html",
+            error=True,
+            message=e.errors()[0]["msg"],
+        )
+
+    event = db.get(Event, event_id)
+    if event and event.organizer_id == organizer.id:
+        event.title = form.title
+        event.is_open = form.status == "OPEN"
+        db.commit()
+        db.refresh(event)
+
+        set_message(request, "Event saved successfully.")
+        return redirect("/dashboard")
+
+    set_message(
+        request,
+        "Invalid / Deleted event OR you have no access manage it.",
+        "error",
+    )
+    return redirect("/dashboard")

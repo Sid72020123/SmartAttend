@@ -93,6 +93,31 @@ class EventCreate(BaseModel):
         return v
 
 
+class EventEdit(BaseModel):
+    title: str
+    status: str
+
+    @field_validator("title")
+    @classmethod
+    def name_length(cls, v):
+        v = v.strip()
+        if not 3 <= len(v) <= 200:
+            raise PydanticCustomError(
+                "title_length",
+                "Title must be between 3 and 200 characters.",
+            )
+        return v
+
+    @model_validator(mode="after")
+    def status_valid(self):
+        if self.status not in ["OPEN", "CLOSE"]:
+            raise PydanticCustomError(
+                "status_invalid",
+                "Status not valid",
+            )
+        return self
+
+
 class CheckInInput(BaseModel):
     attendee_name: str = Field(min_length=2, max_length=100)
     email: EmailStr

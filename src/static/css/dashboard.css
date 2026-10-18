@@ -205,3 +205,24 @@ main > h1 {
     width: 1%;
     white-space: nowrap;
 }
+
+form#edit-event-form .field {
+    display: flex;
+    flex-direction: column;
+}
+
+form#edit-event-form .field .input-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+form#edit-event-form .field input {
+    flex: 1;
+}
+
+form#edit-event-form .field .d-button {
+    flex: 0 0 auto;
+    padding: 0.75rem 1rem;
+}
+

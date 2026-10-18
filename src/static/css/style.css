@@ -215,6 +215,26 @@ form > .button-field {
     outline: none;
 }
 
+.field select {
+    display: block;
+    width: 100%;
+    padding: 0.7rem 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: white;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.field select:focus {
+    background-color: #ffd8a8;
+    border-color: #d9480f;
+    outline: none;
+}
+
 form button.form-action-button,
 a.form-action-button {
     font-size: 0.9rem;

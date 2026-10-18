@@ -55,7 +55,7 @@
                                 <td class="action-column">
                                     <a class="d-button view-button">View</a>
                                     {# <a class="d-button manage-button" href="{{  }}">Manage</a> #}
-                                    <a class="d-button manage-button">Manage</a>
+                                    <a class="d-button manage-button" href="{{ url_for('manage_event', event_id=event.id) }}">Manage</a>
                                 </td>
                             </tr>
                         {% endfor %}

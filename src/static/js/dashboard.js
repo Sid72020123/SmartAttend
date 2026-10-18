@@ -47,3 +47,25 @@ document.querySelectorAll(".event-created-at").forEach((element) => {
     element.textContent = humanizeTimestamp(timestamp);
     element.title = new Date(parsedTimestamp).toLocaleString();
 });
+
+// For event management:
+const input = document.getElementById("event-title");
+const editBtn = document.getElementById("edit-toggle");
+const saveBtn = document.getElementById("save-btn");
+
+const eventStatus = document.getElementById("event-status");
+
+if (input && editBtn && saveBtn) {
+    editBtn.addEventListener("click", () => {
+        input.removeAttribute("disabled");
+        input.focus();
+        editBtn.style.display = "none";
+        saveBtn.style.display = "inline-block";
+    });
+}
+
+if (eventStatus) {
+    eventStatus.addEventListener("change", () => {
+        saveBtn.style.display = "inline-block";
+    });
+}
