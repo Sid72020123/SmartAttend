@@ -322,6 +322,37 @@ a#dashboard-button:hover {
     background: #51cf66;
 }
 
+details.event-details {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    background: #e9ecef;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+}
+
+details.event-details summary {
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: black;
+}
+
+details.event-details div {
+    margin-left: 2.5rem;
+    font-style: italic;
+    margin-bottom: 7px;
+}
+
+details.event-details span {
+    display: inline-block;
+    font-weight: bold;
+    margin-right: 3px;
+    font-style: normal;
+}
+
 @media (max-width: 950px) {
     .hero-section {
         flex-direction: column;

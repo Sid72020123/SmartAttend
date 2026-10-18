@@ -16,7 +16,7 @@ from sqlalchemy.exc import IntegrityError
 from starlette.middleware.sessions import SessionMiddleware
 
 from .database import Base, engine, get_db
-from .models import create_tables, Organizer, Event
+from .models import create_tables, Organizer, Event, Attendance
 from .schemas import (
     RegisterInput,
     LoginInput,
@@ -24,6 +24,7 @@ from .schemas import (
     EventCreate,
     EventOut,
     EventEdit,
+    CheckInInput,
 )
 from .security import hash_password, verify_password
 from .utils import make_qrcode
@@ -516,3 +517,90 @@ def delete_event(
 
     set_message(request, "Event deleted successfully.")
     return redirect("/dashboard")
+
+
+# Attendance Check-In
+@app.get("/checkin/{token}")
+def checkin_page(
+    request: Request,
+    token: str,
+    db: Annotated[Session, Depends(get_db)],
+):
+    event = db.query(Event).filter(Event.qr_token == token).first()
+
+    if not event or not event.is_open:
+        return render_template(request, "checkin.html", success=False)
+
+    event_out = EventOut(
+        id=event.id,
+        title=event.title,
+        is_open=event.is_open,
+        created_at=event.created_at,
+        created_at_iso=utc_isoformat(event.created_at),
+    )
+
+    return render_template(
+        request,
+        "checkin.html",
+        success=True,
+        event=event_out,
+        token=token,
+        manager=event.organizer.name,
+    )
+
+
+@app.post("/checkin/{token}")
+def checkin(
+    request: Request,
+    token: str,
+    db: Annotated[Session, Depends(get_db)],
+    csrf: Annotated[str, Form()],
+    attendee_name: Annotated[str, Form()],
+    attendee_email: Annotated[str, Form()],
+):
+    if not valid_csrf(request, csrf):
+        return render_template(
+            request,
+            "checkin.html",
+            error=True,
+            message="Your form expired. Please try again.",
+        )
+    event = db.query(Event).filter(Event.qr_token == token).first()
+
+    if not event or not event.is_open:
+        return render_template(request, "checkin.html", success=False)
+
+    try:
+        form = CheckInInput(attendee_name=attendee_name, attendee_email=attendee_email)
+    except ValidationError as e:
+        return render_template(
+            request,
+            "checkin.html",
+            error=True,
+            message=e.errors()[0]["msg"],
+        )
+
+    record = Attendance(
+        attendee_name=form.attendee_name,
+        email=form.attendee_email,
+        event_id=event.id,
+    )
+    db.add(record)
+
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        return render_template(
+            request,
+            "checkin.html",
+            error=True,
+            message="This email has already checked in to this event.",
+        )
+
+    return render_template(
+        request,
+        "checkin.html",
+        error=False,
+        message="You're checked in successfully!",
+    )

@@ -119,8 +119,24 @@ class EventEdit(BaseModel):
 
 
 class CheckInInput(BaseModel):
-    attendee_name: str = Field(min_length=2, max_length=100)
-    email: EmailStr
+    attendee_name: str
+    attendee_email: EmailStr
+
+    @field_validator("attendee_name")
+    @classmethod
+    def name_length(cls, v):
+        v = v.strip()
+        if not 2 <= len(v) <= 100:
+            raise PydanticCustomError(
+                "name_length",
+                "Name must be between 2 and 100 characters.",
+            )
+        return v
+
+    @field_validator("attendee_email")
+    @classmethod
+    def normalize_email(cls, v):
+        return v.strip().lower()
 
 
 class AttendanceOutput(BaseModel):
