@@ -50,10 +50,10 @@
                         style="display:none">Save</button>
             </div>
         </form>
-        <!-- Delete/Edit Event Form -->
+        <!-- Delete Event Form -->
         <details>
             <summary>Delete Event #{{ event.id }}</summary>
-            <form id="edit-event-form"
+            <form id="delete-event-form"
                   method="post"
                   action="{{ url_for('delete_event', event_id=event.id) }}">
                 <input type="hidden" name="csrf" value="{{ csrf_token }}" />

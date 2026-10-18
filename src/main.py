@@ -106,6 +106,9 @@ def get_current_organizer(request: Request, db: Session):
         return None
 
     organizer = db.get(Organizer, organizer_id)
+    if organizer is None:
+        request.session.clear()
+        return None
     return OrganizerOut(id=organizer.id, name=organizer.name, email=organizer.email)
 
 

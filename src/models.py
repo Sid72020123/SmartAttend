@@ -23,7 +23,11 @@ class Organizer(Base):
     email: Mapped[str] = mapped_column(String(254), unique=True, index=True)
     password_hash: Mapped[str] = mapped_column(String(255))
 
-    events: Mapped[list["Event"]] = relationship(back_populates="organizer")
+    events: Mapped[list["Event"]] = relationship(
+        back_populates="organizer",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
 
 
 class Event(Base):
@@ -35,9 +39,15 @@ class Event(Base):
     is_open: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
-    organizer_id: Mapped[int] = mapped_column(ForeignKey("organizers.id"))
+    organizer_id: Mapped[int] = mapped_column(
+        ForeignKey("organizers.id", ondelete="CASCADE")
+    )
     organizer: Mapped["Organizer"] = relationship(back_populates="events")
-    attendance: Mapped[list["Attendance"]] = relationship(back_populates="event")
+    attendance: Mapped[list["Attendance"]] = relationship(
+        back_populates="event",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
 
 
 class Attendance(Base):
@@ -55,7 +65,9 @@ class Attendance(Base):
     email: Mapped[str] = mapped_column(String(254))
     checked_in_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
-    event_id: Mapped[int] = mapped_column(ForeignKey("events.id"))
+    event_id: Mapped[int] = mapped_column(
+        ForeignKey("events.id", ondelete="CASCADE")
+    )
     event: Mapped["Event"] = relationship(back_populates="attendance")
 
 
