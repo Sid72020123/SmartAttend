@@ -102,6 +102,11 @@ def get_current_organizer(request: Request, db: Session):
     return OrganizerOut(id=organizer.id, name=organizer.name, email=organizer.email)
 
 
+def set_message(request: Request, message: str, category: str = "success"):
+    request.session["message"] = message
+    request.session["category"] = category
+
+
 # --- App Routes ---
 
 
@@ -180,7 +185,7 @@ def register_user(
     request.session.clear()
     request.session["organizer_id"] = organizer.id
     csrf_token(request)
-
+    set_message(request, "Account created successfully! Logged in...")
     return redirect("/dashboard")
 
 
@@ -234,6 +239,7 @@ def login_user(
     request.session.clear()
     request.session["organizer_id"] = organizer.id
     csrf_token(request)
+    set_message(request, "Logged in successfully. Welcome back.")
 
     return redirect("/dashboard")
 
@@ -257,6 +263,8 @@ def dashboard(
     request: Request,
     db: Annotated[Session, Depends(get_db)],
 ):
+    message = request.session.pop("message", None)
+    category = request.session.pop("category", None)
 
     organizer = get_current_organizer(request, db)
     if not organizer:
@@ -281,7 +289,12 @@ def dashboard(
     ]
 
     return render_template(
-        request, "dashboard.html", organizer=organizer, events=events
+        request,
+        "dashboard.html",
+        message=message,
+        category=category,
+        organizer=organizer,
+        events=events,
     )
 
 
@@ -340,5 +353,18 @@ def create_event_post(
     db.refresh(new_event)
 
     # TODO: generate QR code and save it
-
+    set_message(request, "Event created successfully.")
     return redirect("/dashboard")
+
+
+# Manage Events
+# @app.get("/events/manage/{event_id}")
+# def manage_event(
+#     request: Request,
+#     db: Annotated[Session, Depends(get_db)],
+#     event_id: int
+# ):
+#     if not get_current_organizer(request, db):
+#         return redirect("/login")
+
+#     return render_template(request, "create_event.html")

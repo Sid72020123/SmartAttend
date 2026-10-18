@@ -9,6 +9,12 @@
 {% endblock %}
 {% block content %}
     <main>
+        {% if message %}
+            <div class="message {{ category }}" role="alert">
+                <span>{{ message }}</span>
+                <button type="button" class="message-close" aria-label="Close message">&times;</button>
+            </div>
+        {% endif %}
         <h1>Organizer Dashboard</h1>
         <div class="user-section">
             <h3 class="user-name">Welcome, {{ organizer.name }}!</h3>
@@ -30,7 +36,7 @@
                             <th>Title</th>
                             <th>Open</th>
                             <th>Created</th>
-                            <th>Action</th>
+                            <th class="action-column">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -46,7 +52,11 @@
                                         {{ event.created_at_iso }} ({{ event.created_at_iso }})
                                     </time>
                                 </td>
-                                <td>TODO</td>
+                                <td class="action-column">
+                                    <a class="d-button view-button">View</a>
+                                    {# <a class="d-button manage-button" href="{{  }}">Manage</a> #}
+                                    <a class="d-button manage-button">Manage</a>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>

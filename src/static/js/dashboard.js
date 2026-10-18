@@ -1,6 +1,16 @@
 "use strict";
 
-// Time formatter and humanize script created by an AI model:
+// Message auto-closing code by an AI agent:
+document.querySelectorAll(".message").forEach((message) => {
+    const closeMessage = () => {
+        message.classList.add("hidden");
+    };
+
+    message.querySelector(".message-close")?.addEventListener("click", closeMessage);
+    window.setTimeout(closeMessage, 20_000);
+});
+
+// Time formatter and humanize script created by an AI agent:
 const relativeTimeFormatter = new Intl.RelativeTimeFormat(undefined, {
     numeric: "auto",
 });
