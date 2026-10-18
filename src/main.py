@@ -26,6 +26,7 @@ from .schemas import (
     EventEdit,
 )
 from .security import hash_password, verify_password
+from .utils import make_qrcode
 
 # --- Config ---
 load_dotenv()
@@ -37,6 +38,11 @@ templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 SESSION_SECRET = os.getenv("SESSION_SECRET")
 if not SESSION_SECRET:
     raise RuntimeError("SESSION_SECRET must be configured")
+
+BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:8000")
+
+QR_DIR = BASE_DIR / "static" / "qrcodes"
+QR_DIR.mkdir(parents=True, exist_ok=True)
 
 
 # --- FastAPI Application Setup ---
@@ -362,8 +368,17 @@ def create_event_post(
     db.commit()
     db.refresh(new_event)
 
-    # TODO: generate QR code and save it
-    set_message(request, "Event created successfully.")
+    try:
+        checkin_url = f"{BASE_URL.rstrip('/')}/checkin/{new_event.qr_token}"
+
+        image = make_qrcode(checkin_url)
+        image.save(QR_DIR / f"event_{new_event.id}.png")
+
+        set_message(request, "Event created successfully.")
+    except Exception as E:
+        set_message(
+            request, f"An error occurred while generating the QR code: {E}", "error"
+        )
     return redirect("/dashboard")
 
 
