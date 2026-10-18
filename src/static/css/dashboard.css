@@ -226,3 +226,41 @@ form#edit-event-form .field .d-button {
     padding: 0.75rem 1rem;
 }
 
+details {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 1rem;
+    border: 1px solid #ffa8a8;
+    border-radius: 10px;
+    background: #ffe3e3;
+}
+
+details summary {
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: black;
+    /* list-style: none; */
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background: #ffa8a8;
+    margin-bottom: 1rem;
+}
+
+details[open] summary {
+    background: #ff8787;
+}
+
+details summary:hover {
+    background: #ff8787;
+}
+
+#delete-event-button {
+    display: block;
+    color: white;
+    background: #ff8787;
+}
+
+#delete-event-button:hover {
+    background: #fa5252;
+}

@@ -388,7 +388,7 @@ def manage_event(
 
     set_message(
         request,
-        "Invalid / Deleted event OR you have no access manage it.",
+        "Invalid / Deleted event OR you have no access to manage it.",
         "error",
     )
     return redirect("/dashboard")
@@ -407,10 +407,29 @@ def edit_event(
     if not organizer:
         return redirect("/login")
 
+    event = db.get(Event, event_id)
+    if not event or event.organizer_id != organizer.id:
+        set_message(
+            request,
+            "Invalid / Deleted event OR you have no access to manage it.",
+            "error",
+        )
+        return redirect("/dashboard")
+
+    event_out = EventOut(
+        id=event.id,
+        title=event.title,
+        is_open=event.is_open,
+        created_at=event.created_at,
+        created_at_iso=utc_isoformat(event.created_at),
+    )
+
     if not valid_csrf(request, csrf):
         return render_template(
             request,
             "manage_event.html",
+            organizer=organizer,
+            event=event_out,
             error=True,
             message="Your form expired. Please try again.",
         )
@@ -421,23 +440,61 @@ def edit_event(
         return render_template(
             request,
             "manage_event.html",
+            organizer=organizer,
+            event=event_out,
             error=True,
             message=e.errors()[0]["msg"],
         )
 
-    event = db.get(Event, event_id)
-    if event and event.organizer_id == organizer.id:
-        event.title = form.title
-        event.is_open = form.status == "OPEN"
-        db.commit()
-        db.refresh(event)
+    event.title = form.title
+    event.is_open = form.status == "OPEN"
+    db.commit()
+    db.refresh(event)
 
-        set_message(request, "Event saved successfully.")
+    set_message(request, "Event saved successfully.")
+    return redirect("/dashboard")
+
+
+@app.post("/events/delete/{event_id}")
+def delete_event(
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+    csrf: Annotated[str, Form()],
+    event_id: int,
+):
+    organizer = get_current_organizer(request, db)
+    if not organizer:
+        return redirect("/login")
+
+    event = db.get(Event, event_id)
+    if not event or event.organizer_id != organizer.id:
+        set_message(
+            request,
+            "Invalid / Deleted event OR you have no access to manage it.",
+            "error",
+        )
         return redirect("/dashboard")
 
-    set_message(
-        request,
-        "Invalid / Deleted event OR you have no access manage it.",
-        "error",
+    event_out = EventOut(
+        id=event.id,
+        title=event.title,
+        is_open=event.is_open,
+        created_at=event.created_at,
+        created_at_iso=utc_isoformat(event.created_at),
     )
+
+    if not valid_csrf(request, csrf):
+        return render_template(
+            request,
+            "manage_event.html",
+            organizer=organizer,
+            event=event_out,
+            error=True,
+            message="Your form expired. Please try again.",
+        )
+
+    db.delete(event)
+    db.commit()
+
+    set_message(request, "Event deleted successfully.")
     return redirect("/dashboard")

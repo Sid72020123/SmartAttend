@@ -57,7 +57,7 @@ const eventStatus = document.getElementById("event-status");
 
 if (input && editBtn && saveBtn) {
     editBtn.addEventListener("click", () => {
-        input.removeAttribute("disabled");
+        input.removeAttribute("readonly");
         input.focus();
         editBtn.style.display = "none";
         saveBtn.style.display = "inline-block";
