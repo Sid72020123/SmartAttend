@@ -15,6 +15,51 @@
         </ul>
     </div>
 </div>
-<main>
+<main class="features-section">
+    {# Features section tag lines and titles by an AI model, whereas the images were  #}
+    <h1>Manage Smarter. Attend Better.</h1>
+    <p class="features-intro">Everything you need to create events, track participation, and keep attendance organized.</p>
+    <div class="feature-grid">
+        <article class="feature-card">
+            <img src="{{ url_for('static', path='images/features/dashboard.png') }}"
+                 alt="SmartAttend organizer dashboard showing multiple events" />
+            <div class="feature-card-content">
+                <h2>Your Events, All in One Place</h2>
+                <p>Manage every event from a clear and powerful organizer dashboard.</p>
+            </div>
+        </article>
+        <article class="feature-card">
+            <img src="{{ url_for('static', path='images/features/view_event.png') }}"
+                 alt="SmartAttend event page with a QR check-in code" />
+            <div class="feature-card-content">
+                <h2>Share Check-In Instantly</h2>
+                <p>Generate QR codes, share event links, and make joining effortless.</p>
+            </div>
+        </article>
+        <article class="feature-card">
+            <img src="{{ url_for('static', path='images/features/edit_events.png') }}"
+                 alt="SmartAttend event editing page" />
+            <div class="feature-card-content">
+                <h2>Stay in Control</h2>
+                <p>Update event details, change availability, or remove events whenever you need.</p>
+            </div>
+        </article>
+        <article class="feature-card">
+            <img src="{{ url_for('static', path='images/features/attendee_info.png') }}"
+                 alt="SmartAttend attendee table with check-in information" />
+            <div class="feature-card-content">
+                <h2>Track Attendance with Ease</h2>
+                <p>View attendee details, monitor check-in times, and export records as CSV.</p>
+            </div>
+        </article>
+        <article class="feature-card">
+            <img src="{{ url_for('static', path='images/features/delete_settings.png') }}"
+                 alt="SmartAttend settings page with event and account deletion controls" />
+            <div class="feature-card-content">
+                <h2>Your Data, Your Choice</h2>
+                <p>Manage your account and securely delete events or attendee data when needed.</p>
+            </div>
+        </article>
+    </div>
 </main>
 {% endblock %}
