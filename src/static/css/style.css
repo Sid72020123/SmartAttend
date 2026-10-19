@@ -40,6 +40,95 @@ header {
     z-index: 1000;
 }
 
+footer {
+    width: 100%;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+
+    background: white;
+    color: #495057;
+
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+footer img {
+    width: 42px;
+}
+
+.footer-brand a {
+    text-decoration: none;
+}
+
+.brand-smart {
+    color: #e67700;
+}
+
+.brand-attend {
+    color: #2b8a3e;
+}
+
+footer p {
+    font-size: 0.9rem;
+}
+
+footer nav {
+    font-size: 0.9rem;
+}
+
+footer nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    list-style: none;
+}
+
+footer nav a {
+    color: #495057;
+    text-decoration: none;
+}
+
+footer nav a:hover {
+    color: #1864ab;
+    text-decoration: underline;
+}
+
+footer nav + nav {
+    margin-top: 0.25rem;
+}
+
+.footer-credit {
+    font-size: 0.8rem;
+    color: #868e96;
+}
+
+.footer-credit a {
+    color: #1864ab;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.footer-credit a:hover {
+    color: #0b4f8a;
+    text-decoration: underline;
+}
+
+footer small {
+    color: #868e96;
+}
+
 .header-title {
     display: flex;
     flex-direction: row;

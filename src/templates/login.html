@@ -1,41 +1,38 @@
-{% extends "base.html" %}
-{% block title %}Login{% endblock %}
-{% block content %}
-    <main>
-        <!-- Login Form -->
-        <h1>Login</h1>
-        <form id="login-form" method="post" action="{{ url_for('login_user') }}">
-            <input type="hidden" name="csrf" value="{{ csrf_token }}" />
-
-            <div class="field">
-                <label for="login-email">Email</label>
-                <input id="login-email"
-                       type="email"
-                       name="email"
-                       autofocus
-                       autocomplete="email"
-                       required />
-            </div>
-            <div class="field">
-                <label for="login-password">Password</label>
-                <input id="login-password"
-                       type="password"
-                       name="password"
-                       autocomplete="password"
-                       required />
-            </div>
-            {% if message %}
-                {% if error %}
-                    <div class="message error" role="alert">{{ message }}</div>
-                {% else %}
-                    <div class="message success" role="alert">{{ message }}</div>
-                {% endif %}
+{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content %}
+<main>
+    <!-- Login Form -->
+    <h1>Login</h1>
+    <form id="login-form" method="post" action="{{ url_for('login_user') }}">
+        <input type="hidden" name="csrf" value="{{ csrf_token }}" />
+        <div class="field">
+            <label for="login-email">Email</label>
+            <input id="login-email"
+                   type="email"
+                   name="email"
+                   autofocus
+                   autocomplete="email"
+                   required />
+        </div>
+        <div class="field">
+            <label for="login-password">Password</label>
+            <input id="login-password"
+                   type="password"
+                   name="password"
+                   autocomplete="password"
+                   required />
+        </div>
+        {% if message %}
+            {% if error %}
+                <div class="message error" role="alert">{{ message }}</div>
+            {% else %}
+                <div class="message success" role="alert">{{ message }}</div>
             {% endif %}
-            <div class="button-field">
-                <button type="submit" class="form-action-button main-form-button">Login</button>
-                <i>Don't have an account?</i>
-                <a href="{{ url_for('register') }}" class="form-action-button">Register</a>
-            </div>
-        </form>
-    </main>
+        {% endif %}
+        <div class="button-field">
+            <button type="submit" class="form-action-button main-form-button">Login</button>
+            <i>Don't have an account?</i>
+            <a href="{{ url_for('register') }}" class="form-action-button">Register</a>
+        </div>
+    </form>
+</main>
 {% endblock %}

@@ -6,15 +6,14 @@
         <title>{% block title %}{% endblock %} | SmartAttend</title>
         <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}" />
         <link rel="icon" type="image/svg" href="{{ url_for('static', path='images/logo.svg') }}" />
-        {% block styles %}{% endblock %}
-        {% block scripts %}{% endblock %}
+        {% block styles %}{% endblock %} {% block scripts %}{% endblock %}
     </head>
     <body>
         <header>
             <div class="header-title">
                 <img src="{{ url_for('static', path='images/logo.svg') }}" alt="Logo" />
                 <a href="{{ url_for('home') }}"
-                    ><span style="color: #e67700">Smart</span><span style="color: #2b8a3e">Attend</span></a
+                    ><span class="brand-smart">Smart</span><span class="brand-attend">Attend</span></a
                 >
             </div>
             <nav>
@@ -44,5 +43,41 @@
             </nav>
         </header>
         <div class="content">{% block content %}{% endblock %}</div>
+        <footer>
+            <div class="footer-brand">
+                <img src="{{ url_for('static', path='images/logo.svg') }}" alt="SmartAttend logo" />
+                <a href="{{ url_for('home') }}">
+                    <span class="brand-smart">Smart</span><span class="brand-attend">Attend</span>
+                </a>
+            </div>
+            <p>Scan. Check In. Stay Counted.</p>
+            <nav aria-label="Footer navigation">
+                <ul>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    {% if request.session.get("organizer_id") %}
+                    <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('register') }}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <nav aria-label="Project links">
+                <ul>
+                    <li>
+                        <a href="https://github.com/Sid72020123/SmartAttend" target="_blank" rel="noopener noreferrer"
+                            >GitHub</a
+                        >
+                    </li>
+                </ul>
+            </nav>
+            <small>© SmartAttend. All rights reserved.</small>
+            <i class="footer-credit">
+                Built by
+                <a href="https://github.com/Sid72020123" target="_blank" rel="noopener noreferrer">@Sid72020123</a>
+                as a <a href="https://cs50.harvard.edu/x/" target="_blank" rel="noopener noreferrer">CS50x</a> Final
+                Project.
+            </i>
+        </footer>
     </body>
 </html>
