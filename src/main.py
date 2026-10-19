@@ -567,25 +567,6 @@ def checkin(
 ):
 
     event = db.query(Event).filter(Event.qr_token == token).first()
-    event_out = EventOut(
-        id=event.id,
-        title=event.title,
-        is_open=event.is_open,
-        created_at=event.created_at,
-        created_at_iso=utc_isoformat(event.created_at),
-    )
-    
-    if not valid_csrf(request, csrf):
-        return render_template(
-            request,
-            "checkin.html",
-            error=True,
-            event=event_out,
-            token=token,
-            manager=event.organizer.name,
-            message="Your form expired. Please try again.",
-        )
-    
     if not event or not event.is_open:
         return render_template(
             request,
@@ -595,6 +576,25 @@ def checkin(
                         <h2 style="margin-bottom: 10px;">This Event is unavailable or closed.</h2>
                         <i>Please contact the event manager for any issues.</i>
                     </div>""",
+        )
+
+    event_out = EventOut(
+        id=event.id,
+        title=event.title,
+        is_open=event.is_open,
+        created_at=event.created_at,
+        created_at_iso=utc_isoformat(event.created_at),
+    )
+
+    if not valid_csrf(request, csrf):
+        return render_template(
+            request,
+            "checkin.html",
+            error=True,
+            event=event_out,
+            token=token,
+            manager=event.organizer.name,
+            message="Your form expired. Please try again.",
         )
 
     try:
