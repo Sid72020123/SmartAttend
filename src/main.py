@@ -529,7 +529,15 @@ def checkin_page(
     event = db.query(Event).filter(Event.qr_token == token).first()
 
     if not event or not event.is_open:
-        return render_template(request, "checkin.html", success=False)
+        return render_template(
+            request,
+            "message.html",
+            title="Check-In Event (Error)",
+            message="""<div class="message error" role="alert" style="text-align: center;">
+                <h2 style="margin-bottom: 10px;">This Event is unavailable or closed.</h2>
+                <i>Please contact the event manager for any issues.</i>
+            </div>""",
+        )
 
     event_out = EventOut(
         id=event.id,
@@ -542,7 +550,6 @@ def checkin_page(
     return render_template(
         request,
         "checkin.html",
-        success=True,
         event=event_out,
         token=token,
         manager=event.organizer.name,
@@ -558,17 +565,37 @@ def checkin(
     attendee_name: Annotated[str, Form()],
     attendee_email: Annotated[str, Form()],
 ):
+
+    event = db.query(Event).filter(Event.qr_token == token).first()
+    event_out = EventOut(
+        id=event.id,
+        title=event.title,
+        is_open=event.is_open,
+        created_at=event.created_at,
+        created_at_iso=utc_isoformat(event.created_at),
+    )
+    
     if not valid_csrf(request, csrf):
         return render_template(
             request,
             "checkin.html",
             error=True,
+            event=event_out,
+            token=token,
+            manager=event.organizer.name,
             message="Your form expired. Please try again.",
         )
-    event = db.query(Event).filter(Event.qr_token == token).first()
-
+    
     if not event or not event.is_open:
-        return render_template(request, "checkin.html", success=False)
+        return render_template(
+            request,
+            "message.html",
+            title="Check-In Event (Error)",
+            message="""<div class="message error" role="alert" style="text-align: center;">
+                        <h2 style="margin-bottom: 10px;">This Event is unavailable or closed.</h2>
+                        <i>Please contact the event manager for any issues.</i>
+                    </div>""",
+        )
 
     try:
         form = CheckInInput(attendee_name=attendee_name, attendee_email=attendee_email)
@@ -577,6 +604,9 @@ def checkin(
             request,
             "checkin.html",
             error=True,
+            event=event_out,
+            token=token,
+            manager=event.organizer.name,
             message=e.errors()[0]["msg"],
         )
 
@@ -595,12 +625,18 @@ def checkin(
             request,
             "checkin.html",
             error=True,
+            event=event_out,
+            token=token,
+            manager=event.organizer.name,
             message="This email has already checked in to this event.",
         )
 
     return render_template(
         request,
-        "checkin.html",
-        error=False,
-        message="You're checked in successfully!",
+        "message.html",
+        title="Check-In Event Successful",
+        message="""<div class="message success" role="alert" style="text-align: center;">
+                    <h2 style="margin-bottom: 10px;">Successfully checked-in!</h2>
+                    <i>You can now close this tab.</i>
+                </div>""",
     )
