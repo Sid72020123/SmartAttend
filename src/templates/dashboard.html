@@ -1,72 +1,74 @@
-{% extends "base.html" %} {% block title %}Organizer Dashboard{% endblock %} {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}" />
-{% endblock %} {% block scripts %}
-<script src="{{ url_for('static', path='js/dashboard.js') }}" defer></script>
-{% endblock %} {% block content %}
-<main>
-    {% if message %}
-    <div class="message {{ category }}" role="alert">
-        <span>{{ message }}</span>
-        <button type="button" class="message-close" aria-label="Close message">×</button>
-    </div>
-    {% endif %}
-    <h1>Organizer Dashboard</h1>
-    <div class="user-section">
-        <h3 class="user-name">Welcome, {{ organizer.name }}!</h3>
-        <a href="{{ url_for('home') }}" class="d-button">Settings</a>
-    </div>
-    <div class="event-management">
-        <h2>Your Events</h2>
-        <div class="table-buttons">
-            <a href="{{ url_for('create_event') }}" class="d-button" id="new-event-button">Create New +</a>
-        </div>
-        {% if not events %}
-        <div style="text-align: center">
-            <b><i>You currently have no events created.</i></b>
-        </div>
-        {% else %}
-        <i>Showing {{ events | length }} events.</i>
-        <div class="events-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Event ID</th>
-                        <th>Title</th>
-                        <th>Open</th>
-                        <th>Created</th>
-                        <th class="action-column">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for event in events %}
-                    <tr>
-                        <td>{{ event.id }}</td>
-                        <td class="event-title">{{ event.title }}</td>
-                        <td class="{{ 'event-open' if event.is_open else 'event-closed' }}">
-                            {{ "Yes" if event.is_open else "No" }}
-                        </td>
-                        <td>
-                            <time
-                                class="event-created-at"
-                                datetime="{{ event.created_at_iso }}"
-                                title="{{ event.created_at_iso }}">
-                                {{ event.created_at_iso }} ({{ event.created_at_iso }})
-                            </time>
-                        </td>
-                        <td class="action-column">
-                            <a class="d-button view-button" href="{{ url_for('view_event', event_id=event.id) }}"
-                                >View</a
-                            >
-                            <a class="d-button manage-button" href="{{ url_for('manage_event', event_id=event.id) }}"
-                                >Manage</a
-                            >
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+{% extends "base.html" %}
+{% block title %}Organizer Dashboard{% endblock %}
+{% block styles %}
+    <link rel="stylesheet"
+          href="{{ url_for('static', path='css/dashboard.css') }}" />
+{% endblock %}
+{% block scripts %}
+    <script src="{{ url_for('static', path='js/dashboard.js') }}" defer></script>
+{% endblock %}
+{% block content %}
+    <main>
+        {% if message %}
+            <div class="message {{ category }}" role="alert">
+                <span>{{ message }}</span>
+                <button type="button" class="message-close" aria-label="Close message">×</button>
+            </div>
         {% endif %}
-    </div>
-</main>
+        <h1>Organizer Dashboard</h1>
+        <div class="user-section">
+            <h3 class="user-name">Welcome, {{ organizer.name }}!</h3>
+            <a href="{{ url_for('settings') }}" class="d-button">Settings</a>
+        </div>
+        <div class="event-management">
+            <h2>Your Events</h2>
+            <div class="table-buttons">
+                <a href="{{ url_for('create_event') }}"
+                   class="d-button"
+                   id="new-event-button">Create New +</a>
+            </div>
+            {% if not events %}
+                <div style="text-align: center">
+                    <b><i>You currently have no events created.</i></b>
+                </div>
+            {% else %}
+                <i>Showing {{ events | length }} events.</i>
+                <div class="events-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Event ID</th>
+                                <th>Title</th>
+                                <th>Open</th>
+                                <th>Created</th>
+                                <th class="action-column">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for event in events %}
+                                <tr>
+                                    <td>{{ event.id }}</td>
+                                    <td class="event-title">{{ event.title }}</td>
+                                    <td class="{{ 'event-open' if event.is_open else 'event-closed' }}">{{ "Yes" if event.is_open else "No" }}</td>
+                                    <td>
+                                        <time class="event-created-at"
+                                              datetime="{{ event.created_at_iso }}"
+                                              title="{{ event.created_at_iso }}">
+                                            {{ event.created_at_iso }} ({{ event.created_at_iso }})
+                                        </time>
+                                    </td>
+                                    <td class="action-column">
+                                        <a class="d-button view-button"
+                                           href="{{ url_for('view_event', event_id=event.id) }}">View</a>
+                                        <a class="d-button manage-button"
+                                           href="{{ url_for('manage_event', event_id=event.id) }}">Manage</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </main>
 {% endblock %}

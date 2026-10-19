@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import (
     Boolean,
@@ -63,7 +63,11 @@ class Attendance(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     attendee_name: Mapped[str] = mapped_column(String(100))
     email: Mapped[str] = mapped_column(String(254))
-    checked_in_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    checked_in_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=lambda: datetime.now(timezone.utc).replace(tzinfo=None),
+        server_default=func.now(),
+    )
 
     event_id: Mapped[int] = mapped_column(
         ForeignKey("events.id", ondelete="CASCADE")

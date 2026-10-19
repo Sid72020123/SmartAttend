@@ -141,6 +141,77 @@ def home(request: Request):
     return render_template(request, "index.html")
 
 
+@app.get("/settings")
+def settings(
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+):
+    organizer = get_current_organizer(request, db)
+    if not organizer:
+        return redirect("/login")
+
+    return render_template(
+        request,
+        "settings.html",
+        organizer=organizer,
+        message=request.session.pop("message", None),
+        category=request.session.pop("category", None),
+    )
+
+
+@app.post("/events/delete-all")
+def delete_all_events(
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+    csrf: Annotated[str, Form()],
+):
+    organizer = get_current_organizer(request, db)
+    if not organizer:
+        return redirect("/login")
+
+    if not valid_csrf(request, csrf):
+        set_message(request, "Your form expired. Please try again.", "error")
+        return redirect("/settings")
+
+    account = db.get(Organizer, organizer.id)
+    if account is None:
+        request.session.clear()
+        return redirect("/")
+
+    for event in db.query(Event).filter(Event.organizer_id == account.id).all():
+        db.delete(event)
+    db.commit()
+
+    set_message(request, "All events and attendee data were deleted.")
+    return redirect("/dashboard")
+
+
+@app.post("/account/delete")
+def delete_account(
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+    csrf: Annotated[str, Form()],
+):
+    organizer_id = request.session.get("organizer_id")
+    organizer = get_current_organizer(request, db)
+    if not organizer or not organizer_id:
+        return redirect("/login")
+
+    if not valid_csrf(request, csrf):
+        set_message(request, "Your form expired. Please try again.", "error")
+        return redirect("/settings")
+
+    account = db.get(Organizer, organizer_id)
+    if account is None:
+        request.session.clear()
+        return redirect("/")
+
+    db.delete(account)
+    db.commit()
+    request.session.clear()
+    return redirect("/")
+
+
 # Register
 @app.get("/register")
 def register(request: Request):
@@ -734,9 +805,7 @@ def download_attendees_csv(
     writer.writerow(["Attendee Name", "Email", "Checked In At"])
     for attendee in attendees:
         checked_in_at = (
-            utc_isoformat(attendee.checked_in_at)
-            if attendee.checked_in_at
-            else ""
+            utc_isoformat(attendee.checked_in_at) if attendee.checked_in_at else ""
         )
         writer.writerow([attendee.attendee_name, attendee.email, checked_in_at])
 

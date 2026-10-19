@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}User Settings{% endblock %}
+{% block styles %}
+    <link rel="stylesheet"
+          href="{{ url_for('static', path='css/dashboard.css') }}" />
+{% endblock %}
+{% block scripts %}
+    <script src="{{ url_for('static', path='js/dashboard.js') }}" defer></script>
+{% endblock %}
+{% block content %}
+    <main>
+        {% if message %}
+            <div class="message {{ category }}" role="alert">
+                <span>{{ message }}</span>
+                <button type="button" class="message-close" aria-label="Close message">×</button>
+            </div>
+        {% endif %}
+        <h1>User Settings</h1>
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <a class="d-button" href="{{ url_for('dashboard') }}">Dashboard</a>
+        </div>
+        <div class="settings-sections">
+            <details class="delete-settings-details">
+                <summary>Delete All Events</summary>
+                <p>
+                    <i>This permanently deletes all of your events and attendee data.</i>
+                    <br />
+                    <b>This action cannot be undone.</b>
+                </p>
+                <form method="post" action="{{ url_for('delete_all_events') }}">
+                    <input type="hidden" name="csrf" value="{{ csrf_token }}" />
+                    <button type="submit"
+                            class="d-button delete-button"
+                            onclick="return confirm('Delete all of your events and attendee data? This cannot be undone.');">
+                        Delete All Events
+                    </button>
+                </form>
+            </details>
+            <details class="delete-settings-details">
+                <summary>Delete Account</summary>
+                <p>
+                    <i>This permanently deletes your account, events, and attendee data.</i>
+                    <br />
+                    <b>This action cannot be undone.</b>
+                </p>
+                <form method="post" action="{{ url_for('delete_account') }}">
+                    <input type="hidden" name="csrf" value="{{ csrf_token }}" />
+                    <button type="submit"
+                            class="d-button delete-button"
+                            onclick="return confirm('Delete your account and all of its events? This cannot be undone.');">
+                        Delete Account
+                    </button>
+                </form>
+            </details>
+        </div>
+    </main>
+{% endblock %}

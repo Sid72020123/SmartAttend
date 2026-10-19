@@ -1,8 +1,6 @@
-{% extends "base.html" %}
-{% block title %}View Event #{{ event.id }}{% endblock %}
-{% block styles %}
-    <link rel="stylesheet"
-          href="{{ url_for('static', path='css/dashboard.css') }}" />
+{% extends "base.html" %} {% block title %}View Event #{{ event.id }}{% endblock %} {% block styles %}
+<link rel="stylesheet"
+      href="{{ url_for('static', path='css/dashboard.css') }}" />
 {% endblock %}
 {% block scripts %}
     <script src="{{ url_for('static', path='js/dashboard.js') }}" defer></script>
@@ -12,17 +10,17 @@
         {% if message %}
             <div class="message {{ category }}" role="alert">
                 <span>{{ message }}</span>
-                <button type="button"
-                        class="message-close"
-                        aria-label="Close message">×</button>
+                <button type="button" class="message-close" aria-label="Close message">×</button>
             </div>
         {% endif %}
         <h1>{{ event.title }}</h1>
         <div style="text-align: center;
                     font-size: 0.8rem;
                     margin-bottom: 1rem;
-                    color: gray"><i>(Event #{{ event.id }})</i></div>
-        <div style="text-align: center; margin-bottom: 2rem;">
+                    color: gray">
+            <i>(Event #{{ event.id }})</i>
+        </div>
+        <div style="text-align: center; margin-bottom: 2rem">
             <a class="d-button" href="{{ url_for('dashboard') }}">Dashboard</a>
             <a class="d-button manage-button"
                href="{{ url_for('manage_event', event_id=event.id) }}">Manage</a>
@@ -101,10 +99,8 @@
                                                   datetime="{{ attendee.checked_in_at_iso }}">
                                                 {{ attendee.checked_in_at_iso }}
                                             </time>
-                                        {% else %}
-                                            —
-                                        {% endif %}
-                                    </td>
+                            {% else %} — {% endif %}
+                                </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -116,16 +112,14 @@
             <details class="clear-attendees-details">
                 <summary>Clear attendee data</summary>
                 <p>
-                    This permanently deletes all attendee records for this event.
-                    The event itself and its check-in link will not be affected.
+                    This permanently deletes all attendee records for this event. The event itself and its check-in link
+                    will not be affected.
                 </p>
                 <form class="clear-attendees-form"
                       method="post"
                       action="{{ url_for('clear_attendees', event_id=event.id) }}">
                     <input type="hidden" name="csrf" value="{{ csrf_token }}" />
-                    <button type="submit" class="d-button clear-attendees-button">
-                        Clear all attendees
-                    </button>
+                    <button type="submit" class="d-button clear-attendees-button">Clear all attendees</button>
                 </form>
             </details>
         </section>
