@@ -373,7 +373,7 @@ def create_event_post(
         checkin_url = f"{BASE_URL.rstrip('/')}/checkin/{new_event.qr_token}"
 
         image = make_qrcode(checkin_url)
-        image.save(QR_DIR / f"event_{new_event.id}.png")
+        image.save(QR_DIR / f"event_{new_event.qr_token}.png")
 
         set_message(request, "Event created successfully.")
     except Exception as E:
@@ -640,3 +640,38 @@ def checkin(
                     <i>You can now close this tab.</i>
                 </div>""",
     )
+
+
+# View Event & Attendee Details
+@app.get("/events/view/{event_id}")
+def view_event(
+    request: Request, db: Annotated[Session, Depends(get_db)], event_id: int
+):
+    organizer = get_current_organizer(request, db)
+    if not organizer:
+        return redirect("/login")
+
+    e = db.get(Event, event_id)
+    if e and e.organizer_id == organizer.id:
+        event = EventOut(
+            id=e.id,
+            title=e.title,
+            is_open=e.is_open,
+            created_at=e.created_at,
+            created_at_iso=utc_isoformat(e.created_at),
+        )
+        return render_template(
+            request,
+            "view_event.html",
+            organizer=organizer,
+            event=event,
+            manager=e.organizer.name,
+            token=e.qr_token,
+        )
+
+    set_message(
+        request,
+        "Invalid / Deleted event OR you have no access to manage it.",
+        "error",
+    )
+    return redirect("/dashboard")

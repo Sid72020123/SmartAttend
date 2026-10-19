@@ -184,20 +184,20 @@ main > h1 {
     margin: 0 2px;
 }
 
-.events-table .manage-button {
+.manage-button {
     background: #ffd43b;
 }
 
-.events-table .manage-button:hover {
+.manage-button:hover {
     background: #fcc419;
 }
 
-.events-table .view-button {
+.view-button {
     background: #cc5de8;
     color: white;
 }
 
-.events-table .view-button:hover {
+.view-button:hover {
     background: #be4bdb;
 }
 
@@ -226,7 +226,7 @@ form#edit-event-form .field .d-button {
     padding: 0.75rem 1rem;
 }
 
-details {
+details#delete-event-details {
     max-width: 700px;
     margin: 0 auto;
     padding: 1rem;
@@ -235,7 +235,7 @@ details {
     background: #ffe3e3;
 }
 
-details summary {
+details#delete-event-details summary {
     cursor: pointer;
     font-weight: 700;
     font-size: 1.1rem;
@@ -247,11 +247,11 @@ details summary {
     margin-bottom: 1rem;
 }
 
-details[open] summary {
+details#delete-event-details[open] summary {
     background: #ff8787;
 }
 
-details summary:hover {
+details#delete-event-details summary:hover {
     background: #ff8787;
 }
 
@@ -263,4 +263,37 @@ details summary:hover {
 
 #delete-event-button:hover {
     background: #fa5252;
+}
+
+.qr-details {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-around; */
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.qr-details-card {
+    padding: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    background: #e9ecef;
+}
+
+.qr-link-details {
+    margin: 0 3rem;
+    /* width: 100%; */
+}
+
+.qr-image img {
+    /* width: 200px; */
+    /* width: 30%; */
+    max-width: 300px;
+}
+
+@media (max-width: 550px) {
+    .qr-details {
+        flex-direction: column;
+        align-items: center;
+    }
 }

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}View Event #{{ event.id }}{% endblock %}
+{% block styles %}
+    <link rel="stylesheet"
+          href="{{ url_for('static', path='css/dashboard.css') }}" />
+{% endblock %}
+{% block scripts %}
+    <script src="{{ url_for('static', path='js/dashboard.js') }}" defer></script>
+{% endblock %}
+{% block content %}
+    <main>
+        <h1>{{ event.title }}</h1>
+        <div style="text-align: center;
+                    font-size: 0.8rem;
+                    margin-bottom: 1rem;
+                    color: gray"><i>(Event #{{ event.id }})</i></div>
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <a class="d-button" href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a class="d-button manage-button"
+               href="{{ url_for('manage_event', event_id=event.id) }}">Manage</a>
+        </div>
+        <details class="event-details">
+            <summary>Event Info</summary>
+            <div><span>Event ID:</span>{{ event.id }}</div>
+            <div><span>Event Name:</span>{{ event.title }}</div>
+            <div><span>Event Manager Name:</span>{{ manager }}</div>
+        </details>
+        <div class="qr-details">
+            <div class="qr-details-card qr-image">
+                <img src="{{ url_for('static', path='qrcodes/event_' ~ token ~ '.png') }}"
+                     alt="QR Code" />
+            </div>
+            <div class="qr-link-details">
+                <h3>Check-In URL</h3>
+            </div>
+        </div>
+    </main>
+{% endblock %}
