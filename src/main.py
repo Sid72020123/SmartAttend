@@ -1,5 +1,7 @@
 import os
 import secrets
+import csv
+from io import StringIO
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from pathlib import Path
@@ -8,7 +10,7 @@ from typing import Annotated
 from dotenv import load_dotenv
 from pydantic import ValidationError
 from fastapi import FastAPI, Request, Form, Depends
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
@@ -653,6 +655,26 @@ def view_event(
 
     e = db.get(Event, event_id)
     if e and e.organizer_id == organizer.id:
+        message = request.session.pop("message", None)
+        category = request.session.pop("category", None)
+        attendance_records = (
+            db.query(Attendance)
+            .filter(Attendance.event_id == e.id)
+            .order_by(Attendance.checked_in_at.asc(), Attendance.id.asc())
+            .all()
+        )
+        attendees = [
+            {
+                "attendee_name": attendee.attendee_name,
+                "email": attendee.email,
+                "checked_in_at_iso": (
+                    utc_isoformat(attendee.checked_in_at)
+                    if attendee.checked_in_at
+                    else None
+                ),
+            }
+            for attendee in attendance_records
+        ]
         event = EventOut(
             id=e.id,
             title=e.title,
@@ -668,6 +690,10 @@ def view_event(
             manager=e.organizer.name,
             token=e.qr_token,
             checkin_url=f"{BASE_URL.rstrip('/')}/checkin/{e.qr_token}",
+            attendees=attendees,
+            attendee_count=len(attendance_records),
+            message=message,
+            category=category,
         )
 
     set_message(
@@ -676,3 +702,80 @@ def view_event(
         "error",
     )
     return redirect("/dashboard")
+
+
+@app.get("/events/{event_id}/attendees.csv")
+def download_attendees_csv(
+    request: Request, db: Annotated[Session, Depends(get_db)], event_id: int
+):
+    organizer = get_current_organizer(request, db)
+    if not organizer:
+        return redirect("/login")
+
+    event = db.get(Event, event_id)
+    if not event or event.organizer_id != organizer.id:
+        set_message(
+            request,
+            "Invalid / Deleted event OR you have no access to manage it.",
+            "error",
+        )
+        return redirect("/dashboard")
+
+    attendees = (
+        db.query(Attendance)
+        .filter(Attendance.event_id == event.id)
+        .order_by(Attendance.checked_in_at.asc(), Attendance.id.asc())
+        .all()
+    )
+
+    # CSV writing code by an AI agent:
+    output = StringIO(newline="")
+    writer = csv.writer(output)
+    writer.writerow(["Attendee Name", "Email", "Checked In At"])
+    for attendee in attendees:
+        checked_in_at = (
+            utc_isoformat(attendee.checked_in_at)
+            if attendee.checked_in_at
+            else ""
+        )
+        writer.writerow([attendee.attendee_name, attendee.email, checked_in_at])
+
+    return Response(
+        content=output.getvalue(),
+        media_type="text/csv; charset=utf-8",
+        headers={
+            "Content-Disposition": f'attachment; filename="event_{event.id}_attendees.csv"'
+        },
+    )
+
+
+@app.post("/events/{event_id}/attendees/clear")
+def clear_attendees(
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+    event_id: int,
+    csrf: Annotated[str, Form()],
+):
+    organizer = get_current_organizer(request, db)
+    if not organizer:
+        return redirect("/login")
+
+    event = db.get(Event, event_id)
+    if not event or event.organizer_id != organizer.id:
+        set_message(
+            request,
+            "Invalid / Deleted event OR you have no access to manage it.",
+            "error",
+        )
+        return redirect("/dashboard")
+
+    if not valid_csrf(request, csrf):
+        set_message(request, "Your form expired. Please try again.", "error")
+        return redirect(f"/events/view/{event.id}")
+
+    db.query(Attendance).filter(Attendance.event_id == event.id).delete(
+        synchronize_session=False
+    )
+    db.commit()
+    set_message(request, "All attendee data for this event was cleared.")
+    return redirect(f"/events/view/{event.id}")

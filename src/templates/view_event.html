@@ -9,6 +9,14 @@
 {% endblock %}
 {% block content %}
     <main>
+        {% if message %}
+            <div class="message {{ category }}" role="alert">
+                <span>{{ message }}</span>
+                <button type="button"
+                        class="message-close"
+                        aria-label="Close message">×</button>
+            </div>
+        {% endif %}
         <h1>{{ event.title }}</h1>
         <div style="text-align: center;
                     font-size: 0.8rem;
@@ -64,5 +72,62 @@
                    aria-live="polite"></p>
             </div>
         </div>
+        <section class="attendee-section" aria-labelledby="attendee-heading">
+            <div class="attendee-heading-row">
+                <h2 id="attendee-heading">Attendees ({{ attendee_count }})</h2>
+                <a class="d-button"
+                   href="{{ url_for('download_attendees_csv', event_id=event.id) }}">Download CSV</a>
+            </div>
+            {% if attendees %}
+                <div class="attendees-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Checked In</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for attendee in attendees %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ attendee.attendee_name }}</td>
+                                    <td>{{ attendee.email }}</td>
+                                    <td>
+                                        {% if attendee.checked_in_at_iso %}
+                                            <time class="attendee-checked-in-at"
+                                                  datetime="{{ attendee.checked_in_at_iso }}">
+                                                {{ attendee.checked_in_at_iso }}
+                                            </time>
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="empty-attendees"><i>No attendees have checked in yet.</i></p>
+            {% endif %}
+            <details class="clear-attendees-details">
+                <summary>Clear attendee data</summary>
+                <p>
+                    This permanently deletes all attendee records for this event.
+                    The event itself and its check-in link will not be affected.
+                </p>
+                <form class="clear-attendees-form"
+                      method="post"
+                      action="{{ url_for('clear_attendees', event_id=event.id) }}">
+                    <input type="hidden" name="csrf" value="{{ csrf_token }}" />
+                    <button type="submit" class="d-button clear-attendees-button">
+                        Clear all attendees
+                    </button>
+                </form>
+            </details>
+        </section>
     </main>
 {% endblock %}

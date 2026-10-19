@@ -48,6 +48,26 @@ document.querySelectorAll(".event-created-at").forEach((element) => {
     element.title = new Date(parsedTimestamp).toLocaleString();
 });
 
+document.querySelectorAll(".attendee-checked-in-at").forEach((element) => {
+    const timestamp = element.getAttribute("datetime");
+    if (!timestamp) {
+        return;
+    }
+
+    const parsedTimestamp = Date.parse(timestamp);
+    if (Number.isNaN(parsedTimestamp)) {
+        return;
+    }
+
+    const formattedTimestamp = new Intl.DateTimeFormat(undefined, {
+        dateStyle: "medium",
+        timeStyle: "short",
+    }).format(new Date(parsedTimestamp));
+
+    element.textContent = formattedTimestamp;
+    element.title = new Date(parsedTimestamp).toISOString();
+});
+
 // For event management:
 const input = document.getElementById("event-title");
 const editBtn = document.getElementById("edit-toggle");
@@ -70,6 +90,15 @@ if (eventStatus) {
     });
 }
 
+document.querySelectorAll(".clear-attendees-form").forEach((form) => {
+    form.addEventListener("submit", (event) => {
+        if (!window.confirm("Clear all attendee data for this event? This cannot be undone.")) {
+            event.preventDefault();
+        }
+    });
+});
+
+/* QR share and buttons code by an AI agent: */
 const copyCheckinLinkButton = document.getElementById("copy-checkin-link");
 const shareCheckinImageButton = document.getElementById("share-checkin-image");
 const checkinActionStatus = document.getElementById("checkin-action-status");
