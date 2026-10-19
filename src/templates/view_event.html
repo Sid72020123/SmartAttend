@@ -28,10 +28,40 @@
         <div class="qr-details">
             <div class="qr-details-card qr-image">
                 <img src="{{ url_for('static', path='qrcodes/event_' ~ token ~ '.png') }}"
-                     alt="QR Code" />
+                     id="checkin-qr-image"
+                     alt="QR code for {{ event.title }} check-in" />
             </div>
             <div class="qr-link-details">
                 <h3>Check-In URL</h3>
+                <div class="qr-link-row">
+                    <label class="visually-hidden" for="checkin-url">Check-in URL</label>
+                    <input id="checkin-url"
+                           type="text"
+                           value="{{ checkin_url }}"
+                           readonly
+                           aria-describedby="checkin-action-status" />
+                    <button type="button"
+                            class="d-button"
+                            id="copy-checkin-link"
+                            data-copy-text="{{ checkin_url }}">Copy</button>
+                </div>
+                <div class="qr-actions">
+                    <button type="button"
+                            class="d-button"
+                            id="share-checkin-image"
+                            data-event-title="{{ event.title }}"
+                            data-checkin-url="{{ checkin_url }}"
+                            data-image-url="{{ url_for('static', path='qrcodes/event_' ~ token ~ '.png') }}">
+                        Share QR image
+                    </button>
+                    <a class="d-button"
+                       href="{{ url_for('static', path='qrcodes/event_' ~ token ~ '.png') }}"
+                       download="event_{{ event.id }}_checkin.png">Download QR image</a>
+                </div>
+                <p id="checkin-action-status"
+                   class="qr-action-status"
+                   role="status"
+                   aria-live="polite"></p>
             </div>
         </div>
     </main>

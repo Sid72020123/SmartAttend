@@ -69,3 +69,85 @@ if (eventStatus) {
         saveBtn.style.display = "inline-block";
     });
 }
+
+const copyCheckinLinkButton = document.getElementById("copy-checkin-link");
+const shareCheckinImageButton = document.getElementById("share-checkin-image");
+const checkinActionStatus = document.getElementById("checkin-action-status");
+
+function setCheckinActionStatus(message) {
+    if (checkinActionStatus) {
+        checkinActionStatus.textContent = message;
+    }
+}
+
+if (copyCheckinLinkButton) {
+    copyCheckinLinkButton.addEventListener("click", async () => {
+        const text = copyCheckinLinkButton.dataset.copyText;
+        if (!text) {
+            return;
+        }
+
+        try {
+            await navigator.clipboard.writeText(text);
+        } catch {
+            const urlInput = document.getElementById("checkin-url");
+            urlInput.focus();
+            urlInput.select();
+            document.execCommand("copy");
+            urlInput.setSelectionRange(0, 0);
+        }
+
+        setCheckinActionStatus("Check-in link copied.");
+    });
+}
+
+if (shareCheckinImageButton) {
+    shareCheckinImageButton.addEventListener("click", async () => {
+        const imageUrl = shareCheckinImageButton.dataset.imageUrl;
+        const eventTitle = shareCheckinImageButton.dataset.eventTitle || "Event";
+        const checkinUrl = shareCheckinImageButton.dataset.checkinUrl;
+
+        if (!imageUrl) {
+            return;
+        }
+
+        try {
+            const response = await fetch(imageUrl);
+            if (!response.ok) {
+                throw new Error("Unable to load the QR image.");
+            }
+
+            const imageBlob = await response.blob();
+            const imageFile = new File([imageBlob], "checkin-qr.png", {
+                type: imageBlob.type || "image/png",
+            });
+
+            if (navigator.canShare?.({ files: [imageFile] }) && navigator.share) {
+                await navigator.share({
+                    title: `${eventTitle} check-in`,
+                    text: "Scan this QR code to check in.",
+                    files: [imageFile],
+                });
+                setCheckinActionStatus("QR image shared.");
+            } else if (navigator.share) {
+                await navigator.share({
+                    title: `${eventTitle} check-in`,
+                    text: "Use this link to check in.",
+                    url: checkinUrl,
+                });
+                setCheckinActionStatus("Check-in link shared.");
+            } else {
+                const downloadLink = document.createElement("a");
+                downloadLink.href = URL.createObjectURL(imageBlob);
+                downloadLink.download = "checkin-qr.png";
+                downloadLink.click();
+                URL.revokeObjectURL(downloadLink.href);
+                setCheckinActionStatus("QR image downloaded because sharing is unavailable.");
+            }
+        } catch (error) {
+            if (error.name !== "AbortError") {
+                setCheckinActionStatus("Unable to share the QR image. Use Download QR image instead.");
+            }
+        }
+    });
+}

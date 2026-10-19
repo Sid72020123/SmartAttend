@@ -667,6 +667,7 @@ def view_event(
             event=event,
             manager=e.organizer.name,
             token=e.qr_token,
+            checkin_url=f"{BASE_URL.rstrip('/')}/checkin/{e.qr_token}",
         )
 
     set_message(
