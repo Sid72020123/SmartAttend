@@ -69,9 +69,7 @@ class Attendance(Base):
         server_default=func.now(),
     )
 
-    event_id: Mapped[int] = mapped_column(
-        ForeignKey("events.id", ondelete="CASCADE")
-    )
+    event_id: Mapped[int] = mapped_column(ForeignKey("events.id", ondelete="CASCADE"))
     event: Mapped["Event"] = relationship(back_populates="attendance")
 
 
