@@ -139,3 +139,17 @@ the features enabled in the application.
     - [templates/view_event.html](src/templates/view_event.html) - _Dashboard page / section to view the event QR code and share it. Also, includes a table to view attendees info and options to download the list as a `.csv` file._
     - [templates/settings.html](src/templates/settings.html) - _Contains buttons to permanently delete the user's data or the events created by that particular user._
     - _(Other template files are [templates/login.html](src/templates/login.html), [templates/register.html](src/templates/register.html), etc.)_
+
+### Static Files:
+
+- All the "static" content required by the frontend including `CSS`, `JavaScript` and image files are in the [src/static/](src/static/) directory.
+- #### Styles (_CSS_):
+    Files are in the [static/css](src/static/css) directory.
+    - [css/style.css](src/static/css/style.css) - _Main application CSS styles of the project._
+    - [css/dashboard.css](src/static/css/dashboard.css) - _Styling for the user dashboard pages._
+- #### Scripts (_JavaScript_):
+    The [static/js](src/static/js/) directory contains a single JS file; [js/dashboard.js](src/static/js/dashboard.js) containing the code to convert the time stored in DB to local user time in the browser. This file also contains the code for QR code sharing / downloading and maps the specific functions to various button and other events in the frontend dashboard.
+- #### Images:
+    The [static/images](src/static/images/) directory contains the images such as the website favicon / logo and other images used in the dashboard.
+- #### QR Code Images
+    The [static/qrcodes](src/static/qrcodes/) directory is where the generated QR codes of events are stored.
