@@ -67,3 +67,52 @@ the features enabled in the application.
 - **QRCode _(Python library)_:** _QR-code generation._
 - **Uvicorn:** _Development and application server._
 - _Other Python libraries used by this project are listed in [requirements.txt](requirements.txt)_
+
+## Project / Repository Structure
+
+<small>_(Tree structre below generated using `tree` in )_</small>
+
+```
+.
+├── README.md
+├── requirements.txt
+└── src
+    ├── database.py
+    ├── main.py
+    ├── models.py
+    ├── schemas.py
+    ├── security.py
+    ├── static
+    │   ├── css
+    │   │   ├── dashboard.css
+    │   │   └── style.css
+    │   ├── images
+    │   │   ├── features
+    │   │   │   ├── attendee_info.png
+    │   │   │   ├── dashboard.png
+    │   │   │   ├── delete_settings.png
+    │   │   │   ├── edit_events.png
+    │   │   │   └── view_event.png
+    │   │   ├── logo.png
+    │   │   └── logo.svg
+    │   ├── js
+    │   │   ├── dashboard.js
+    │   │   └── main.js
+    │   └── qrcodes
+    ├── templates
+    │   ├── base.html
+    │   ├── checkin.html
+    │   ├── create_event.html
+    │   ├── dashboard.html
+    │   ├── index.html
+    │   ├── login.html
+    │   ├── manage_event.html
+    │   ├── message.html
+    │   ├── register.html
+    │   ├── settings.html
+    │   └── view_event.html
+    └── utils.py
+
+9 directories, 30 files
+
+```
