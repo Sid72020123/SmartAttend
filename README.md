@@ -70,7 +70,7 @@ the features enabled in the application.
 
 ## Project / Repository Structure
 
-<small>_(Tree structre below generated using `tree` in )_</small>
+<small>_(Tree structre below was generated using `tree` in `Ubuntu 26.04`)_</small>
 
 ```
 .
@@ -116,3 +116,26 @@ the features enabled in the application.
 9 directories, 30 files
 
 ```
+
+### Core Python Files:
+
+- All the main code is in [src/](src/) directory of the repository.
+- [main.py](src/main.py) - _Defines the necessary `FastAPI` application routes._
+- [database.py](src/database.py) - _Creates the `SQLAlchemy` session to make and handle the connection to the DB._
+- [models.py](src/models.py) - _Defines the `SQLAlchemy` ORM models to handle the queries to the DB without using `SQL`_
+- [schemas.py](src/schemas.py) - _Defines `Pydantic` schemas used to validate or structure application data._
+- [security.py](src/security.py) - _Contains secure password hashing and password verification functions._
+- [utils.py](src/utils.py) - _Contains a function to make QR codes with the application logo placed at the centre._
+
+### Templates:
+
+- All the `Jinja2` templates required by this project are in [src/templates/](src/templates/) directory.
+- It contains a base / main template - [templates/base.html](src/templates/base.html) which is then extended by other templates.
+- Following is a brief summary of some main template files:
+    - [templates/index.html](src/templates/index.html) - _Main homepage, contains the hero section & features listed._
+    - [templates/dashboard.html](src/templates/dashboard.html) - _User dashboard, containing events list and management options._
+    - [templates/checkin.html](src/templates/checkin.html) - _Event page displayed to the user when they scan the QR code to check-in for an event._
+    - [templates/manage_event.html](src/templates/manage_event.html) - _Dashboard page / section to change the name of an event, change its open / close status or permanently delete an event._
+    - [templates/view_event.html](src/templates/view_event.html) - _Dashboard page / section to view the event QR code and share it. Also, includes a table to view attendees info and options to download the list as a `.csv` file._
+    - [templates/settings.html](src/templates/settings.html) - _Contains buttons to permanently delete the user's data or the events created by that particular user._
+    - _(Other template files are [templates/login.html](src/templates/login.html), [templates/register.html](src/templates/register.html), etc.)_
