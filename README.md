@@ -16,6 +16,10 @@ SmartAttend addresses these problems by allowing organizers to create
 events, generate QR codes for check-ins, and maintain attendance records
 in a centralized database.
 
+---
+
+**Application Favicon:**
+
 <center><img src="src/static/images/logo.svg" style="text-align: center;" /></center>
 
 ## Features
@@ -152,4 +156,44 @@ the features enabled in the application.
 - #### Images:
     The [static/images](src/static/images/) directory contains the images such as the website favicon / logo and other images used in the dashboard.
 - #### QR Code Images
-    The [static/qrcodes](src/static/qrcodes/) directory is where the generated QR codes of events are stored.
+    The [static/qrcodes](src/static/qrcodes/) directory is where the generated QR codes of events are stored. _(If its not visible in the repository / folder, running the program for the first time will automatically create it.)_
+
+## DataBase Design:
+
+SmartAttend uses **MySQL** to store its application data.
+
+```mermaid
+erDiagram
+    direction LR
+
+    ORGANIZERS ||--o{ EVENTS : organizes
+    EVENTS ||--o{ ATTENDANCE : records
+
+    ORGANIZERS {
+        int id PK
+        varchar name "100 characters"
+        varchar email UK "254 characters"
+        varchar password_hash "255 characters"
+    }
+
+    EVENTS {
+        int id PK
+        varchar title "200 characters"
+        varchar qr_token UK "100 characters"
+        boolean is_open
+        datetime created_at
+        int organizer_id FK
+    }
+
+    ATTENDANCE {
+        int id PK
+        varchar attendee_name "100 characters"
+        varchar email "254 characters"
+        datetime checked_in_at
+        int event_id FK
+    }
+```
+
+The above diagram, generated using [Mermaid](https://mermaid.ai/open-source/), shows the information stored in each table, including the data types, keys (primary & foreign), etc.
+
+There is a **one-to-many** relationship between `Organizers` and `Events` tables, and also with `Events` and `Attendance`.
