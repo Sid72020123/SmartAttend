@@ -344,3 +344,53 @@ Some parts of this _README_ file are from an AI agent. But everything is verifie
 While developing this project, I also asked AI about various things like how to handle authentication properly, how to prepare ORM models for the database, how to protect some certain application routes, etc.
 
 I also asked it it review my project from time to time and warn me of any possible security or other errors and helped me fix them.
+
+## Design Decisions
+
+Initially, I wanted to make this application using `Python + FastAPI` as the backend and `HTML, CSS, Vanilla JavaScript` as the frontend but honestly speaking, I was a beginner in JS and didn't know much of the language, like `fetch` method and `Promises`.
+
+So, I thought why not just make the whole application in Python with minimal client-side JS? So, that's why I used the current tech stack.
+
+### Why FastAPI?
+
+I could have used `Flask` as taught in the course but I wanted to try something different and `FastAPI` has a very great choice because of the ease of data validation and automatic API docs.
+
+### Why MySQL as the DataBase?
+
+I am an undergrad in CS _(as of Oct 2026)_, and we were taught `MySQL` in the college. So, I decided to go with that and practice with MySQL.
+
+### Why use ORMs?
+
+One of the seniors in my college told me that using ORMs is very helpful and I can migrate my DB with minimal code changes.
+
+And it helped me very much during the development process. I didn't have to write queries manually, I just need to pass the new objects to the pre-defined `SQLAlchemy ORM` methods and the library would handle it automatically for me and perform many other operations for me with minimal code and fewer function calls.
+
+## Challenges and Future Improvements
+
+During the development, I encountered many challenges and the most challenging for me was the frontend design part, like making the webpage responsive on smaller devices, handling user inputs and button events in the frontend, etc.
+
+On the backend side, I had to be very careful about the access to certain pages and the protection of particular resource, like an event created by an organizer should not be accessible by another organizer.
+
+I had to validate user inputs & verify request headers at each route and it was quite a difficult task for me to manage it.
+
+But, I got to learn a lot of new things while fixing many errors and I enjoyed the process.
+
+**Potential future improvements include attendee analytics, improved
+mobile interfaces, email notifications, event scheduling, and additional
+attendance verification methods like biometric verification, etc.**
+
+More features can be added like:
+
+- Showing the live data / attendees count in the organizer dashboard using websockets.
+- Allowing the event organizer to collect more information from attendees _(like making a custom form in Google Forms)_ instead of the default name and email ID.
+- Making event scheduling more smarter, like auto-closing attendee forms at a specific time, etc.
+
+## Acknowledgments
+
+I would like to express my sincere gratitude to **Dr. David J. Malan** and the entire **CS50 team at Harvard University** for creating such an engaging, insightful, and inspiring course.
+
+I am grateful for the knowledge, guidance, and inspiration this course **_(CS50x)_** has provided.
+
+This project is a reflection of what I have learned throughout this journey, and I look forward to continuing to learn, build, and improve as a developer.
+
+Thank you to everyone who makes CS50 possible.
