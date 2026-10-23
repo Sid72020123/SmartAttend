@@ -72,6 +72,128 @@ the features enabled in the application.
 - **Uvicorn:** _Development and application server._
 - _Other Python libraries used by this project are listed in [requirements.txt](requirements.txt)_
 
+## Local Installation and Setup
+
+### Prerequisites
+
+Before running SmartAttend, install:
+
+- Python 3.11 or newer. **Python 3.14.4** is the version currently used
+  to develop and verify the project. Any version below that are is not tested yet. Python 3.11 is the minimum version allowed by the major dependencies but not verified yet.
+- MySQL Server.
+- Git, if you are cloning the repository.
+
+### 1. Clone the repository
+
+Clone the repository and navigate to its root directory:
+
+```bash
+git clone https://github.com/Sid72020123/SmartAttend.git
+cd SmartAttend
+```
+
+Alternatively, open your existing SmartAttend project directory in a
+terminal.
+
+### 2. Create and activate a virtual environment
+
+On Windows PowerShell:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+On macOS or Linux:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+If the virtual environment is active, your terminal prompt usually
+starts with `(.venv)`.
+
+### 3. Install Python dependencies
+
+Upgrade `pip` and install the pinned dependencies:
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+### 4. Configure MySQL
+
+Start the local MySQL server, then create the SmartAttend database:
+
+```sql
+CREATE DATABASE SmartAttend
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+```
+
+Create a dedicated MySQL user for the application and grant it access
+to the database:
+
+```sql
+CREATE USER 'attendance_user'@'localhost'
+IDENTIFIED BY 'YOUR_PASSWORD';
+
+GRANT ALL PRIVILEGES ON SmartAttend.* TO 'attendance_user'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+Do not use the MySQL `root` account as the application's database user.
+The application creates its tables automatically when it starts.
+
+### 5. Configure environment variables
+
+Create a `.env` file in the project root, alongside `src/`. Add the
+following values and replace the example password and secret:
+
+```dotenv
+DATABASE_URL=mysql+pymysql://attendance_user:YOUR_PASSWORD@127.0.0.1:3306/SmartAttend
+SESSION_SECRET=YOUR_GENERATED_RANDOM_SECRET
+BASE_URL=http://127.0.0.1:8000
+COOKIE_SECURE=false
+```
+
+If the MySQL password contains characters such as `@`, `:`, `/`, or
+`#`, URL-encode the password before placing it in `DATABASE_URL`.
+
+Generate a strong session secret with:
+
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(48))"
+```
+
+**Keep `.env` private. It is ignored by Git and must never be committed,
+because it contains database credentials and the session secret.**
+
+For local development, `COOKIE_SECURE=false` allows the session cookie
+to work over HTTP on localhost. Use HTTPS and set `COOKIE_SECURE=true`
+when deploying to production.
+
+### 6. Run the application
+
+From the project root, with the virtual environment active, start the
+development server:
+
+```bash
+python -m uvicorn src.main:app --reload
+```
+
+Open SmartAttend in a browser at:
+
+<http://127.0.0.1:8000>
+
+FastAPI's interactive API documentation is available at:
+
+<http://127.0.0.1:8000/docs>
+
+Press `Ctrl+C` in the terminal to stop the development server.
+
 ## Project / Repository Structure
 
 <small>_(Tree structre below was generated using `tree` in `Ubuntu 26.04`)_</small>
