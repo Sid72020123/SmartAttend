@@ -1,6 +1,6 @@
 # SmartAttend
 
-#### Video Demo: TODO
+#### Video Demo: [YouTube](https://youtu.be/mLNeryzClB0)
 
 #### Description:
 
